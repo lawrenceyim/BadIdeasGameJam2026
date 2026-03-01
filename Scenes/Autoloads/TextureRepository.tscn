@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://crufabqtnl7rn"]
+
+[ext_resource type="Script" uid="uid://jn85514ajguy" path="res://Scripts/Repository/Impl/TextureRepository.cs" id="1_do7ye"]
+
+[node name="TextureRepository" type="Node" unique_id=1170545600]
+script = ExtResource("1_do7ye")
