@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cn2cwdbd8nm51"]
+
+[ext_resource type="Script" uid="uid://vwl8i8egt3xf" path="res://Scripts/Game Objects/PackageGO.cs" id="1_281r1"]
+
+[node name="Package" type="Node2D" unique_id=123228166]
+script = ExtResource("1_281r1")

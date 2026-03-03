@@ -12,7 +12,7 @@ config_version=5
 
 config/name="BadIdeasGameJam2026"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="res://Assets/Sprites/icon.svg"
+config/icon="res://Assets/Sprites/Placeholder/icon.svg"
 
 [autoload]
 
@@ -21,6 +21,11 @@ PackedSceneRepository="*uid://d0mat6q6ienmb"
 SceneRepository="*uid://bu3sw7m8mht3k"
 SoundEffectRepository="*uid://rdcdnqf0eucs"
 TextureRepository="*uid://crufabqtnl7rn"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
 
 [dotnet]
 

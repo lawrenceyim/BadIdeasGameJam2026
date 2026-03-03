@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bcrktom385lxj"]
+
+[ext_resource type="Script" uid="uid://cm6d1r4ntvo5g" path="res://Scripts/Scenes/PackageStorage.cs" id="1_mlsvq"]
+[ext_resource type="PackedScene" uid="uid://c0g33a0t0ufof" path="res://Scenes/Game Object/StorageTile.tscn" id="2_gwp26"]
+
+[node name="PackageStorage" type="Node2D" unique_id=882079434]
+script = ExtResource("1_mlsvq")
+_placeholderTile = ExtResource("2_gwp26")

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bafgr6qs2ul8d"]
+
+[ext_resource type="Script" uid="uid://clmrge5q3umwb" path="res://Scripts/Scenes/TestScene2.cs" id="1_eylbi"]
+[ext_resource type="Texture2D" uid="uid://dnauire3ei3ql" path="res://Assets/Sprites/Placeholder/icon.svg" id="2_owa34"]
+
+[node name="TestScene2" type="Node2D" unique_id=975498496]
+script = ExtResource("1_eylbi")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=73147527]
+position = Vector2(426, 229)
+texture = ExtResource("2_owa34")

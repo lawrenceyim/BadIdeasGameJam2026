@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c0g33a0t0ufof"]
+
+[ext_resource type="Texture2D" uid="uid://ckcwgg2k4k7py" path="res://Assets/Sprites/Placeholder/Placeholder Tile.png" id="1_bqlkb"]
+[ext_resource type="Script" uid="uid://b6mmikb4sjava" path="res://Scripts/Game Objects/StorageTile.cs" id="2_d027m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bqlkb"]
+size = Vector2(32, 32)
+
+[node name="StorageTile" type="Sprite2D" unique_id=1897925842 node_paths=PackedStringArray("_hitbox")]
+texture = ExtResource("1_bqlkb")
+script = ExtResource("2_d027m")
+_hitbox = NodePath("Area2D")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1657058412]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=2136142171]
+shape = SubResource("RectangleShape2D_bqlkb")

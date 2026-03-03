@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bu3sw7m8mht3k"]
 
 [ext_resource type="Script" uid="uid://eon0s6ns6pxw" path="res://Scripts/Repository/Impl/SceneRepository.cs" id="1_y5ugw"]
-[ext_resource type="PackedScene" uid="uid://5dtg3ehp7trf" path="res://Scenes/TestScene1.tscn" id="2_nxi10"]
-[ext_resource type="PackedScene" uid="uid://bafgr6qs2ul8d" path="res://Scenes/TestScene2.tscn" id="3_bihjn"]
+[ext_resource type="PackedScene" uid="uid://5dtg3ehp7trf" path="res://Scenes/Test/TestScene1.tscn" id="2_nxi10"]
+[ext_resource type="PackedScene" uid="uid://bafgr6qs2ul8d" path="res://Scenes/Test/TestScene2.tscn" id="3_bihjn"]
 
 [node name="SceneRepository" type="Node" unique_id=1200789495]
 script = ExtResource("1_y5ugw")
