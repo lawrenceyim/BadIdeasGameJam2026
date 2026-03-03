@@ -19,10 +19,17 @@ public partial class InputController : Node {
                 ));
                 break;
             case InputEventMouseButton mouseButtonPressed:
-                InputFromPlayer?.Invoke(new MouseButtonPressedDto(
-                    mouseButtonPressed.ButtonIndex.ToString(),
-                    GetWindow().GetMousePosition()
-                ));
+                if (mouseButtonPressed.Pressed) {
+                    InputFromPlayer?.Invoke(new MouseButtonPressedDto(
+                        mouseButtonPressed.ButtonIndex.ToString(),
+                        GetWindow().GetMousePosition()
+                    ));
+                } else {
+                    InputFromPlayer?.Invoke(new MouseButtonReleasedDto(
+                        mouseButtonPressed.ButtonIndex.ToString(),
+                        GetWindow().GetMousePosition()
+                    ));
+                }
                 break;
             case InputEventMouseMotion mouseMotion:
                 InputFromPlayer?.Invoke(new MouseMotionDto(
