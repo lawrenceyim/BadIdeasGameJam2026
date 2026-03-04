@@ -22,6 +22,7 @@ public partial class PackageStorage : Node2D, IInputState {
 	private StorageTile?[,] _tiles = null!;
 	private StorageTile? _currentTile;
 	private PackageGO? _currentPackage;
+	private Vector2I _currentPackageTile;
 	private Vector2I? _lastPackageTile;
 	private PackageGO? _lastPackage;
 	private bool _dragPackage = false;
@@ -38,16 +39,17 @@ public partial class PackageStorage : Node2D, IInputState {
 
 	public void ProcessInput(InputEventDto eventDto) {
 		if (eventDto is MouseButtonPressedDto && _currentPackage != null) {
-			GD.Print("Pressed");
 			_currentPackage.SetOpacity(PackageGO.Opacity.Half);
 			_dragPackage = true;
 		}
 
 		if (eventDto is MouseButtonReleasedDto) {
-			GD.Print("Released");
 			if (_dragPackage) {
 				_currentPackage?.SetOpacity(PackageGO.Opacity.Full);
 				_dragPackage = false;
+
+				// SNAP PACKAGE
+				_SnapPackage();
 			}
 		}
 
@@ -65,6 +67,19 @@ public partial class PackageStorage : Node2D, IInputState {
 		}
 	}
 
+	private void _SnapPackage() {
+		if (_currentPackage is null) {
+			return;
+		}
+
+		if (_currentTile is null) {
+			return;
+		}
+		Vector2I offset = new Vector2I(_currentPackageTile.X * 32, _currentPackageTile.Y * 32);
+		GD.Print($"{_currentTile} {_currentPackageTile} {offset}");
+		_currentPackage.Position = _currentTile.Position - offset;
+	}
+
 	private void _CreatePlaceholderPackage() {
 		PackageGO package = (PackageGO)_placeholderPackage.Instantiate();
 		package.Position = new Vector2(300, 0);
@@ -76,6 +91,8 @@ public partial class PackageStorage : Node2D, IInputState {
 		for (int row = 0; row < _rows; row++) {
 			for (int column = 0; column < _columns; column++) {
 				StorageTile tile = (_placeholderTile.Instantiate() as StorageTile)!;
+				tile.Centered = false;
+				tile.GetNode<Area2D>("Area2D").GetNode<CollisionShape2D>("CollisionShape2D").Position = new Vector2I(16, 16);
 				_tilePositions[tile] = new Vector2I(row, column);
 				_tiles[row, column] = tile;
 				AddChild(tile);
@@ -100,6 +117,7 @@ public partial class PackageStorage : Node2D, IInputState {
 		// hovered false is called after hover entered when mouse cursor enters new tile?
 		if (hovered) {
 			_currentPackage = package;
+			_currentPackageTile = tilePosition;
 			_lastPackageTile = tilePosition;
 			_lastPackage = package;
 			return;
