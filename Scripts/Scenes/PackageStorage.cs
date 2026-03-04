@@ -23,8 +23,6 @@ public partial class PackageStorage : Node2D, IInputState {
 	private StorageTile? _currentTile;
 	private PackageGO? _currentPackage;
 	private Vector2I _currentPackageTile;
-	private Vector2I? _lastPackageTile;
-	private PackageGO? _lastPackage;
 	private bool _dragPackage = false;
 
 	public override void _Ready() {
@@ -118,12 +116,11 @@ public partial class PackageStorage : Node2D, IInputState {
 		if (hovered) {
 			_currentPackage = package;
 			_currentPackageTile = tilePosition;
-			_lastPackageTile = tilePosition;
-			_lastPackage = package;
 			return;
 		}
 
-		if (_lastPackage == package && tilePosition == _lastPackageTile) {
+		if (package == _currentPackage && tilePosition == _currentPackageTile) {
+			GD.Print("Current package set to null");
 			_currentPackage = null;
 		}
 	}
