@@ -87,7 +87,7 @@ public partial class PackageStorage : Node2D, IInputState {
         }
 
         Vector2I offset = new(_currentPackageTile.X * 32, _currentPackageTile.Y * 32);
-        GD.Print($"{_storageTilePositions[_currentStorageTile]} {_currentPackageTile} {offset}");
+        // GD.Print($"{_storageTilePositions[_currentStorageTile]} {_currentPackageTile} {offset}");
         _currentPackage.Position = _currentStorageTile.Position - offset;
         // TODO: Save updated data 
     }
@@ -98,19 +98,27 @@ public partial class PackageStorage : Node2D, IInputState {
         GD.Print($"ISVALIDPACKAGE Storage tile {_storageTilePositions[_currentStorageTile]} Package Tile  {_currentPackageTile}");
         foreach (Vector2I position in package.Dimensions) {
             Vector2I temp = _storageTilePositions[_currentStorageTile] + position - _currentPackageTile;
-            GD.Print($"Position in tile: {position} Position in grid{temp} Offset{position - _currentPackageTile}");
+            // GD.Print($"Position in tile: {position} Position in grid{temp} Offset{position - _currentPackageTile}");
+            GD.Print($"{position} {temp}");
+            if (
+                temp.X < 0
+                || temp.X >= _playerDataRepository.StorageGrid.GetLength(0)
+                || temp.Y < 0
+                || temp.Y >= _playerDataRepository.StorageGrid.GetLength(1)
+            ) {
+                GD.Print("Out of bounds");
+                return false;
+            }
+
             positionsToCheck.Add(temp);
         }
 
-        return true;
-
-
-        foreach (Vector2I position in positionsToCheck) {
-            if (_playerDataRepository.StorageGrid[position.X, position.Y] != 0 ||
-                _playerDataRepository.StorageGrid[position.X, position.Y] != package.PackageId) {
-                return false;
-            }
-        }
+        // foreach (Vector2I position in positionsToCheck) {
+        //     if (_playerDataRepository.StorageGrid[position.X, position.Y] != 0 ||
+        //         _playerDataRepository.StorageGrid[position.X, position.Y] != package.PackageId) {
+        //         return false;
+        //     }
+        // }
 
         return true;
     }
