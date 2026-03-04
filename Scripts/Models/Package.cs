@@ -2,24 +2,15 @@ using System.Collections.Generic;
 using Godot;
 
 public class Package {
-    private List<PackageLabel> _requiredLabels = [];
-    private List<PackageLabel> _givenLabels = [];
-    private List<Vector2I> _dimensions = [];
-    private PackageRotation _rotation = PackageRotation.Zero;
+    public int PackageId { get; }
+    public TextureId TextureId { get; }
+    public List<PackageLabel> RequiredLabels { get; } = [];
+    public List<PackageLabel> GivenLabels { get; } = [];
+    public List<Vector2I> Dimensions { get; } = [];
+    public PackageRotation Rotation { get; set; } = PackageRotation.Zero;
 
-    public void SetRequiredLabels(List<PackageLabel> labels) {
-        _requiredLabels = labels;
-    }
-
-    public void SetDimensions(List<Vector2I> dimensions) {
-        _dimensions = dimensions;
-    }
-
-    public void SetRotation(PackageRotation rotation) {
-        _rotation = rotation;
-    }
-
-    public PackageRotation GetRotation() {
-        return _rotation;
+    public Package(int packageId, TextureId textureId) {
+        PackageId = packageId;
+        TextureId = textureId;
     }
 }
