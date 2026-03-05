@@ -28,6 +28,7 @@ public partial class PackageStorage : Node2D, IInputState {
     private PackageGO? _currentPackage;
     private Vector2I _currentPackageTile;
     private bool _draggingPackage = false;
+    private Vector2 _positionBeforeDrag;
 
     public override void _Ready() {
         ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
@@ -45,6 +46,7 @@ public partial class PackageStorage : Node2D, IInputState {
 
     public void ProcessInput(InputEventDto eventDto) {
         if (eventDto is MouseButtonPressedDto && _currentPackage != null) {
+            _positionBeforeDrag = _currentPackage.Position;
             _currentPackage.SetOpacity(PackageGO.Opacity.Half);
             _draggingPackage = true;
         }
@@ -84,6 +86,7 @@ public partial class PackageStorage : Node2D, IInputState {
 
         // TODO: Add validity check to see if position is occupied
         if (!_IsValidPackagePosition(_packages[_currentPackage])) {
+            _currentPackage.Position = _positionBeforeDrag;
             return;
         }
 
@@ -95,23 +98,13 @@ public partial class PackageStorage : Node2D, IInputState {
 
     private bool _IsValidPackagePosition(Package package) {
         // TODO: Compute which Vector2I to check
-        List<Vector2I> positionsToCheck = [];
+        List<Vector2I> positionsToCheck = _ComputeOverlappingTiles(_packages[_currentPackage], _storageTilePositions[_currentStorageTile], _currentPackageTile);
         GD.Print($"ISVALIDPACKAGE Storage tile {_storageTilePositions[_currentStorageTile]} Package Tile  {_currentPackageTile}");
-        foreach (Vector2I position in package.Dimensions) {
-            Vector2I temp = _storageTilePositions[_currentStorageTile] + position - _currentPackageTile;
-            // GD.Print($"Position in tile: {position} Position in grid{temp} Offset{position - _currentPackageTile}");
-            GD.Print($"{position} {temp}");
-            if (
-                temp.X < 0
-                || temp.X >= _playerDataRepository.StorageGrid.GetLength(0)
-                || temp.Y < 0
-                || temp.Y >= _playerDataRepository.StorageGrid.GetLength(1)
-            ) {
+        foreach (Vector2I position in positionsToCheck) {
+            if (!_IsGridValidTile(position, _playerDataRepository.StorageGrid.GetLength(0), _playerDataRepository.StorageGrid.GetLength(1))) {
                 GD.Print("Out of bounds");
                 return false;
             }
-
-            positionsToCheck.Add(temp);
         }
 
         // foreach (Vector2I position in positionsToCheck) {
@@ -198,19 +191,13 @@ public partial class PackageStorage : Node2D, IInputState {
     }
 
     private void _HighlightTiles(PackageGO package, StorageTile.Highlight highlight) {
-        foreach (Vector2I position in _packages[package].Dimensions) {
-            Vector2I temp = _storageTilePositions[_currentStorageTile] + position - _currentPackageTile;
-            GD.Print($"{position} {temp}");
-            if (
-                temp.X < 0
-                || temp.X >= _playerDataRepository.StorageGrid.GetLength(0)
-                || temp.Y < 0
-                || temp.Y >= _playerDataRepository.StorageGrid.GetLength(1)
-            ) {
+        List<Vector2I> tilesToHighlight = _ComputeOverlappingTiles(_packages[_currentPackage], _storageTilePositions[_currentStorageTile], _currentPackageTile);
+        foreach (Vector2I position in tilesToHighlight) {
+            if (!_IsGridValidTile(position, _playerDataRepository.StorageGrid.GetLength(0), _playerDataRepository.StorageGrid.GetLength(1))) {
                 continue;
             }
 
-            _tiles[temp.X, temp.Y]?.SetHighlight(highlight);
+            _tiles[position.X, position.Y]?.SetHighlight(highlight);
         }
     }
 
@@ -218,5 +205,18 @@ public partial class PackageStorage : Node2D, IInputState {
         foreach (StorageTile tile in _storageTilePositions.Keys) {
             tile.SetHighlight(StorageTile.Highlight.None);
         }
+    }
+
+    private List<Vector2I> _ComputeOverlappingTiles(Package package, Vector2I storageTilePosition, Vector2I packageTilePosition) {
+        List<Vector2I> tiles = [];
+        foreach (Vector2I position in package.Dimensions) {
+            tiles.Add(storageTilePosition + position - packageTilePosition);
+        }
+
+        return tiles;
+    }
+
+    private bool _IsGridValidTile(Vector2I position, int rows, int columns) {
+        return position.X >= 0 && position.X < rows && position.Y >= 0 && position.Y < columns;
     }
 }
