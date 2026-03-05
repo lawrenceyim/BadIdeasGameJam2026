@@ -91,13 +91,18 @@ public partial class PackageStorage : Node2D, IInputState {
         }
 
         Vector2I offset = new(_currentPackageTile.X * 32, _currentPackageTile.Y * 32);
-        // GD.Print($"{_storageTilePositions[_currentStorageTile]} {_currentPackageTile} {offset}");
+        GD.Print($"Current storage tile position {_storageTilePositions[_currentStorageTile]} Current package tile {_currentPackageTile} {offset}");
         _currentPackage.Position = _currentStorageTile.Position - offset;
         // TODO: Save updated data 
     }
 
     private bool _IsValidPackagePosition(Package package) {
         // TODO: Compute which Vector2I to check
+        if (!_storageTilePositions.ContainsKey(_currentStorageTile)) {
+            GD.Print($"Current storage tile position {_currentStorageTile} does not exist");
+            return false;
+        }
+
         List<Vector2I> positionsToCheck = _ComputeOverlappingTiles(_packages[_currentPackage], _storageTilePositions[_currentStorageTile], _currentPackageTile);
         GD.Print($"ISVALIDPACKAGE Storage tile {_storageTilePositions[_currentStorageTile]} Package Tile  {_currentPackageTile}");
         foreach (Vector2I position in positionsToCheck) {
@@ -141,6 +146,16 @@ public partial class PackageStorage : Node2D, IInputState {
                 tile.Hovered += _HandleStorageTileHover;
             }
         }
+
+        Area2D exitHitbox = new Area2D();
+        exitHitbox.Position = new Vector2I(_columns * _yOffset, _rows * _xOffset) / 2;
+        AddChild(exitHitbox);
+        CollisionShape2D exitHitboxShape = new CollisionShape2D();
+        exitHitbox.AddChild(exitHitboxShape);
+        RectangleShape2D rectShape = new RectangleShape2D();
+        rectShape.Size = new Vector2I(_columns * _yOffset, _rows * _xOffset);
+        exitHitboxShape.Shape = rectShape;
+        exitHitbox.MouseExited += _ExitStorageTile;
     }
 
     private void _ResetHighlights() {
@@ -169,20 +184,32 @@ public partial class PackageStorage : Node2D, IInputState {
         }
     }
 
+    private void _ExitStorageTile() {
+        GD.Print("Exit storage");
+        _currentStorageTile = null;
+    }
+
     private void _HandleStorageTileHover(StorageTile tile, bool hovered) {
         if (hovered) {
             _currentStorageTile = tile;
             // GD.Print($"New hovered tile. {_storageTilePositions[tile]}");
-        } else if (_currentStorageTile == tile) {
-            // GD.Print("No hovered tile");
-            _currentStorageTile = null;
         }
+        // else if (_currentStorageTile == tile) {
+        //     // GD.Print("No hovered tile");
+        //     _currentStorageTile = null;
+        // }
 
         _ClearAllHighlights();
         if (!_draggingPackage) {
             return;
         }
 
+        if (_currentPackage is null) {
+            GD.Print("Current package is null");
+            return;
+        }
+
+        GD.Print($"Current package tile {_currentPackage}");
         if (_IsValidPackagePosition(_packages[_currentPackage])) {
             _HighlightTiles(_currentPackage, StorageTile.Highlight.Green);
         } else {
@@ -191,6 +218,11 @@ public partial class PackageStorage : Node2D, IInputState {
     }
 
     private void _HighlightTiles(PackageGO package, StorageTile.Highlight highlight) {
+        if (!_storageTilePositions.ContainsKey(_currentStorageTile)) {
+            GD.Print($"Storage tile {_currentStorageTile} doesn't exist");
+            return;
+        }
+
         List<Vector2I> tilesToHighlight = _ComputeOverlappingTiles(_packages[_currentPackage], _storageTilePositions[_currentStorageTile], _currentPackageTile);
         foreach (Vector2I position in tilesToHighlight) {
             if (!_IsGridValidTile(position, _playerDataRepository.StorageGrid.GetLength(0), _playerDataRepository.StorageGrid.GetLength(1))) {
