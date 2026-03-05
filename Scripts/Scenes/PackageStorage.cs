@@ -27,7 +27,7 @@ public partial class PackageStorage : Node2D, IInputState {
     private StorageTile? _currentStorageTile;
     private PackageGO? _currentPackage;
     private Vector2I _currentPackageTile;
-    private bool _dragPackage = false;
+    private bool _draggingPackage = false;
 
     public override void _Ready() {
         ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
@@ -46,24 +46,25 @@ public partial class PackageStorage : Node2D, IInputState {
     public void ProcessInput(InputEventDto eventDto) {
         if (eventDto is MouseButtonPressedDto && _currentPackage != null) {
             _currentPackage.SetOpacity(PackageGO.Opacity.Half);
-            _dragPackage = true;
+            _draggingPackage = true;
         }
 
         if (eventDto is MouseButtonReleasedDto) {
-            if (_dragPackage) {
+            if (_draggingPackage) {
                 _currentPackage?.SetOpacity(PackageGO.Opacity.Full);
-                _dragPackage = false;
+                _draggingPackage = false;
+                _ClearAllHighlights();
                 _SnapPackage();
             }
         }
 
         if (eventDto is MouseMotionDto mouseMotion) {
-            if (!_dragPackage) {
+            if (!_draggingPackage) {
                 return;
             }
 
             if (_currentPackage is null) {
-                _dragPackage = false;
+                _draggingPackage = false;
                 return;
             }
 
@@ -179,12 +180,43 @@ public partial class PackageStorage : Node2D, IInputState {
         if (hovered) {
             _currentStorageTile = tile;
             // GD.Print($"New hovered tile. {_storageTilePositions[tile]}");
+        } else if (_currentStorageTile == tile) {
+            // GD.Print("No hovered tile");
+            _currentStorageTile = null;
+        }
+
+        _ClearAllHighlights();
+        if (!_draggingPackage) {
             return;
         }
 
-        if (_currentStorageTile == tile) {
-            // GD.Print("No hovered tile");
-            _currentStorageTile = null;
+        if (_IsValidPackagePosition(_packages[_currentPackage])) {
+            _HighlightTiles(_currentPackage, StorageTile.Highlight.Green);
+        } else {
+            _HighlightTiles(_currentPackage, StorageTile.Highlight.Red);
+        }
+    }
+
+    private void _HighlightTiles(PackageGO package, StorageTile.Highlight highlight) {
+        foreach (Vector2I position in _packages[package].Dimensions) {
+            Vector2I temp = _storageTilePositions[_currentStorageTile] + position - _currentPackageTile;
+            GD.Print($"{position} {temp}");
+            if (
+                temp.X < 0
+                || temp.X >= _playerDataRepository.StorageGrid.GetLength(0)
+                || temp.Y < 0
+                || temp.Y >= _playerDataRepository.StorageGrid.GetLength(1)
+            ) {
+                continue;
+            }
+
+            _tiles[temp.X, temp.Y]?.SetHighlight(highlight);
+        }
+    }
+
+    private void _ClearAllHighlights() {
+        foreach (StorageTile tile in _storageTilePositions.Keys) {
+            tile.SetHighlight(StorageTile.Highlight.None);
         }
     }
 }
