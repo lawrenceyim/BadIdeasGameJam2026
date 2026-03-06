@@ -18,8 +18,6 @@ public partial class PackageStorage : Node2D, IInputState {
 	private readonly Dictionary<PackageGO, Package> _packages = [];
 	private PlayerDataRepository _playerDataRepository;
 
-	private int _rows = 5;
-	private int _columns = 5;
 	private int _xOffset = 32;
 	private int _yOffset = 32;
 
@@ -36,9 +34,9 @@ public partial class PackageStorage : Node2D, IInputState {
 		inputStateMachine.SetState(this);
 		RepositoryLocator repositoryLocator = serviceLocator.GetService<RepositoryLocator>();
 		_playerDataRepository = repositoryLocator.GetRepository<PlayerDataRepository>(RepositoryName.PlayerData);
-
-		_tiles = new StorageTile[_rows, _columns];
-		_CreateGrid(_columns, _rows, _xOffset, _yOffset);
+		
+		_tiles = new StorageTile[PlayerDataRepository.StorageGridLength, PlayerDataRepository.StorageGridLength];
+		_CreateGrid(PlayerDataRepository.StorageGridLength, PlayerDataRepository.StorageGridLength, _xOffset, _yOffset);
 
 		// TODO: Replace with func to read from persistence storage and init packages
 		_CreatePlaceholderPackage();
