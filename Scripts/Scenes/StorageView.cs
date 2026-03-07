@@ -80,6 +80,7 @@ public partial class StorageView : Node2D, IInputState {
                 List<Vector2I> tiles = storage.ComputeOverlappingTiles(_packages[_selectedPackage], _selectedStorageTile, _selectedPackageTile);
                 if (storage.PackagePositionIsValid(_packages[_selectedPackage], tiles)) {
                     storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
+                    _SavePackagePosition(_packages[_selectedPackage], tiles, _selectedStorage);
                 } else {
                     _selectedPackage.Position = _positionBeforeDrag;
                 }
@@ -98,6 +99,21 @@ public partial class StorageView : Node2D, IInputState {
 
             _selectedPackage.Position += mouseMotion.Relative;
         }
+    }
+
+    private void _SavePackagePosition(Package package, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
+        int[,] grid = storageMode == PackageStorage.StorageMode.Shipping ? _playerDataRepository.ShippingGrid : _playerDataRepository.StorageGrid;
+        foreach (Vector2I tile in tiles) {
+            grid[tile.X, tile.Y] = package.PackageId;
+        }
+
+        GD.Print($"Saved package {package.PackageId}.\n{string.Join("\n",
+            Enumerable.Range(0, grid.GetLength(0))
+                .Select(y => string.Join(" ",
+                    Enumerable.Range(0, grid.GetLength(1))
+                        .Select(x => grid[x, y])
+                ))
+        )}");
     }
 
     private void _ClearAllHighlights() {
