@@ -40,7 +40,6 @@ public partial class PackageStorage : Node2D {
 	}
 
 	public void Initialize(Vector2I tileSize, StorageMode storageMode) {
-		GD.Print($"Initializing {storageMode}");
 		_mode = storageMode;
 		_tileSize = tileSize;
 		// TODO: DI of grid lengths based on which storage to check for
@@ -107,7 +106,6 @@ public partial class PackageStorage : Node2D {
 	}
 
 	public List<Vector2I> ComputeOverlappingTiles(Package package, Vector2I storageTilePosition, Vector2I packageTilePosition) {
-		GD.Print($"Compute overlapping tiles storage tile {storageTilePosition} package tile {packageTilePosition}");
 		List<Vector2I> tiles = [];
 		foreach (Vector2I position in package.Dimensions) {
 			tiles.Add(storageTilePosition + position - packageTilePosition);
