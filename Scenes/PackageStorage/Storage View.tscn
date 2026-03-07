@@ -2,11 +2,13 @@
 
 [ext_resource type="Script" uid="uid://crv3jhua216cj" path="res://Scripts/Scenes/StorageView.cs" id="1_hmwcn"]
 [ext_resource type="PackedScene" uid="uid://bcrktom385lxj" path="res://Scenes/Game Object/PackageStorage.tscn" id="2_51nkb"]
+[ext_resource type="PackedScene" uid="uid://cn2cwdbd8nm51" path="res://Scenes/Game Object/Package.tscn" id="2_turpy"]
 
 [node name="Node2D" type="Node2D" unique_id=292242860 node_paths=PackedStringArray("_packageStorage", "_shippingStorage")]
 script = ExtResource("1_hmwcn")
 _packageStorage = NodePath("Package Storage")
 _shippingStorage = NodePath("Shipping Storage")
+_placeholderPackage = ExtResource("2_turpy")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1338915600]
 

@@ -8,14 +8,13 @@ public partial class StorageTile : Sprite2D {
         None
     };
 
-    public event Action<StorageTile, bool> Hovered;
+    public event Action<StorageTile> Hovered;
 
     [Export]
     private Area2D _hitbox;
 
     public override void _Ready() {
-        _hitbox.MouseEntered += () => Hovered?.Invoke(this, true);
-        _hitbox.MouseExited += () => Hovered?.Invoke(this, false);
+        _hitbox.MouseEntered += () => Hovered?.Invoke(this);
     }
 
     public void SetHighlight(Highlight highlight) {
