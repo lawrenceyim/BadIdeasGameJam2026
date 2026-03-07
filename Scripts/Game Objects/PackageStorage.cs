@@ -1,25 +1,28 @@
 #nullable enable
-using Godot;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using Godot;
 using InputSystem;
 using RepositorySystem;
 using ServiceSystem;
 
+/*
+ * TODO: Refactor to be modular so multiple storages can be created for UI
+ * To refactor:
+ * - offsets // don't hardcode
+ * - ability to decide which storage to check against in player repository
+ */
 public partial class PackageStorage : Node2D, IInputState {
-	[Export]
-	private PackedScene _placeholderTile = null!;
+	public enum StorageMode {
+		Storage,
+		Shipping,
+	}
 
 	[Export]
-	private PackedScene _placeholderPackage = null!;
+	private PackedScene _placeholderTile = null!;
 
 	private readonly Dictionary<StorageTile, Vector2I> _storageTilePositions = [];
 	private readonly Dictionary<PackageGO, Package> _packages = [];
 	private PlayerDataRepository _playerDataRepository;
-
-	private int _xOffset = 32;
-	private int _yOffset = 32;
 
 	private StorageTile?[,] _tiles = null!;
 	private StorageTile? _selectedStorageTile;
@@ -30,16 +33,20 @@ public partial class PackageStorage : Node2D, IInputState {
 
 	public override void _Ready() {
 		ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
-		InputStateMachine inputStateMachine = serviceLocator.GetService<InputStateMachine>();
-		inputStateMachine.SetState(this);
 		RepositoryLocator repositoryLocator = serviceLocator.GetService<RepositoryLocator>();
 		_playerDataRepository = repositoryLocator.GetRepository<PlayerDataRepository>(RepositoryName.PlayerData);
-		
-		_tiles = new StorageTile[PlayerDataRepository.StorageGridLength, PlayerDataRepository.StorageGridLength];
-		_CreateGrid(PlayerDataRepository.StorageGridLength, PlayerDataRepository.StorageGridLength, _xOffset, _yOffset);
+	}
 
-		// TODO: Replace with func to read from persistence storage and init packages
-		_CreatePlaceholderPackage();
+	public void Initialize(Vector2I tileSize, StorageMode storageMode) {
+		GD.Print($"Initializing {storageMode}");
+		// TODO: DI of grid lengths based on which storage to check for
+		int columns = storageMode == StorageMode.Shipping ? PlayerDataRepository.ShippingGridColumns : PlayerDataRepository.StorageGridLength;
+		int rows = storageMode == StorageMode.Shipping ? PlayerDataRepository.ShippingGridRows : PlayerDataRepository.StorageGridLength;
+		_tiles = new StorageTile[columns, rows];
+		_CreateGrid(columns, rows, tileSize);
+
+
+		// TODO: func to read from persistence storage and init packages
 	}
 
 	public void ProcessInput(InputEventDto eventDto) {
@@ -54,6 +61,9 @@ public partial class PackageStorage : Node2D, IInputState {
 				_selectedPackage?.SetOpacity(PackageGO.Opacity.Full);
 				_draggingPackage = false;
 				_ClearAllHighlights();
+
+				List<Vector2I> temp = _ComputeOverlappingTiles(_packages[_selectedPackage], _storageTilePositions[_selectedStorageTile], _selectedPackageTile);
+				// TODO: 
 				_SnapPackage();
 			}
 		}
@@ -73,14 +83,14 @@ public partial class PackageStorage : Node2D, IInputState {
 	}
 
 	private void _SnapPackage() {
-		if (_selectedPackage is null) {
-			return;
-		}
-
-		if (_selectedStorageTile is null) {
-			// TODO: Add func to snap packages to last valid position if new position is invalid
-			return;
-		}
+		// if (_selectedPackage is null) {
+		//     return;
+		// }
+		//
+		// if (_selectedStorageTile is null) {
+		//     _selectedPackage.Position = _positionBeforeDrag;
+		//     return;
+		// }
 
 		// TODO: Add validity check to see if position is occupied
 		if (!_IsValidPackagePosition(_packages[_selectedPackage])) {
@@ -114,6 +124,7 @@ public partial class PackageStorage : Node2D, IInputState {
 			}
 		}
 
+		// TODO: test with multiple packages to ensure overlapping does not occur
 		// foreach (Vector2I position in positionsToCheck) {
 		//     if (_playerDataRepository.StorageGrid[position.X, position.Y] != 0 ||
 		//         _playerDataRepository.StorageGrid[position.X, position.Y] != package.PackageId) {
@@ -124,38 +135,27 @@ public partial class PackageStorage : Node2D, IInputState {
 		return true;
 	}
 
-	private void _CreatePlaceholderPackage() {
-		PackageGO packageGo = (PackageGO)_placeholderPackage.Instantiate();
-		packageGo.Position = new Vector2(300, 0);
-		AddChild(packageGo);
-		packageGo.Hovered += _HandlePackageHover;
-		List<Vector2I> result = packageGo.HitboxPositions
-			.Select(v => (Vector2I)v)
-			.ToList();
-		_packages[packageGo] = new Package(1, TextureId.PlaceHolder, result);
-	}
-
-	private void _CreateGrid(int columns, int rows, int xOffset, int yOffset) {
+	private void _CreateGrid(int columns, int rows, Vector2I tileSize) {
 		for (int row = 0; row < rows; row++) {
 			for (int column = 0; column < columns; column++) {
 				StorageTile tile = (_placeholderTile.Instantiate() as StorageTile)!;
 				tile.Centered = false;
-				tile.GetNode<Area2D>("Area2D").GetNode<CollisionShape2D>("CollisionShape2D").Position = new Vector2I(xOffset, yOffset) / 2;
+				tile.GetNode<Area2D>("Area2D").GetNode<CollisionShape2D>("CollisionShape2D").Position = tileSize / 2;
 				_storageTilePositions[tile] = new Vector2I(column, row);
 				_tiles[column, row] = tile;
 				AddChild(tile);
-				tile.Position = new Vector2(column * xOffset, row * yOffset);
+				tile.Position = new Vector2I(column * tileSize.X, row * tileSize.Y);
 				tile.Hovered += _HandleStorageTileHover;
 			}
 		}
 
 		Area2D exitHitbox = new();
-		exitHitbox.Position = new Vector2I(columns * xOffset, rows * yOffset) / 2;
+		exitHitbox.Position = new Vector2I(columns * tileSize.X, rows * tileSize.Y) / 2;
 		AddChild(exitHitbox);
 		CollisionShape2D exitHitboxShape = new();
 		exitHitbox.AddChild(exitHitboxShape);
 		RectangleShape2D rectShape = new();
-		rectShape.Size = new Vector2I(columns * xOffset, rows * yOffset);
+		rectShape.Size = new Vector2I(columns * tileSize.X, rows * tileSize.Y);
 		exitHitboxShape.Shape = rectShape;
 		exitHitbox.MouseExited += _ExitStorageTile;
 	}
@@ -167,11 +167,6 @@ public partial class PackageStorage : Node2D, IInputState {
 	}
 
 	private void _HandlePackageHover(PackageGO package, bool hovered, Vector2I tilePosition) {
-		// // GD.Print($"Hovered {hovered} {tilePosition}");
-		// // Safety measure for cases where someone may alt-tab or something so package is no longer hovered
-		// _currentPackage?.SetOpacity(PackageGO.Opacity.Full);
-		// _dragPackage = false;
-
 		// hovered false is called after hover entered when mouse cursor enters new tile?
 		if (hovered) {
 			// GD.Print($"{package} {hovered} {tilePosition}");

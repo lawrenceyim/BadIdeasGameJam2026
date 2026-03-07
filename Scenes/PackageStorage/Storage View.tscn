@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://du3lc54vxmpot"]
+
+[ext_resource type="Script" uid="uid://crv3jhua216cj" path="res://Scripts/Scenes/StorageView.cs" id="1_hmwcn"]
+[ext_resource type="PackedScene" uid="uid://bcrktom385lxj" path="res://Scenes/Game Object/PackageStorage.tscn" id="2_51nkb"]
+
+[node name="Node2D" type="Node2D" unique_id=292242860 node_paths=PackedStringArray("_packageStorage", "_shippingStorage")]
+script = ExtResource("1_hmwcn")
+_packageStorage = NodePath("Package Storage")
+_shippingStorage = NodePath("Shipping Storage")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1338915600]
+
+[node name="Package Storage" parent="." unique_id=882079434 instance=ExtResource("2_51nkb")]
+position = Vector2(-423, -75)
+
+[node name="Shipping Storage" parent="." unique_id=2087576014 instance=ExtResource("2_51nkb")]
+position = Vector2(265, -106)
