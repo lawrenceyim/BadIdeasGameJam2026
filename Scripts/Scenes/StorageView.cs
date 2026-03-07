@@ -80,7 +80,7 @@ public partial class StorageView : Node2D, IInputState {
                 List<Vector2I> tiles = storage.ComputeOverlappingTiles(_packages[_selectedPackage], _selectedStorageTile, _selectedPackageTile);
                 if (storage.PackagePositionIsValid(_packages[_selectedPackage], tiles)) {
                     storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
-                    _RemovePackagePosition(_packages[_selectedPackage], tiles, _selectedStorage);
+                    _RemovePackagePosition(_packages[_selectedPackage], tiles);
                     _SavePackagePosition(_packages[_selectedPackage], tiles, _selectedStorage);
                 } else {
                     _selectedPackage.Position = _positionBeforeDrag;
@@ -105,20 +105,29 @@ public partial class StorageView : Node2D, IInputState {
     private void _SavePackagePosition(Package package, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
         int[,] grid = storageMode == PackageStorage.StorageMode.Shipping ? _playerDataRepository.ShippingGrid : _playerDataRepository.StorageGrid;
         foreach (Vector2I tile in tiles) {
+            GD.Print($"Saving tile {tile} in {storageMode}");
             grid[tile.X, tile.Y] = package.PackageId;
         }
 
-        GD.Print($"Saved package {package.PackageId}.\n{string.Join("\n",
-            Enumerable.Range(0, grid.GetLength(0))
+        GD.Print($"Saved package {package.PackageId} in {storageMode} \n{string.Join("\n",
+            Enumerable.Range(0, grid.GetLength(1))
                 .Select(y => string.Join(" ",
-                    Enumerable.Range(0, grid.GetLength(1))
+                    Enumerable.Range(0, grid.GetLength(0))
                         .Select(x => grid[x, y])
                 ))
         )}");
     }
 
-    private void _RemovePackagePosition(Package package, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
-        int[,] grid = storageMode == PackageStorage.StorageMode.Shipping ? _playerDataRepository.ShippingGrid : _playerDataRepository.StorageGrid;
+    private void _RemovePackagePosition(Package package, List<Vector2I> tiles) {
+        int[,] grid = _playerDataRepository.ShippingGrid;
+        for (int x = 0; x < grid.GetLength(0); x++) {
+            for (int y = 0; y < grid.GetLength(1); y++) {
+                if (grid[x, y] == package.PackageId)
+                    grid[x, y] = 0;
+            }
+        }
+
+        grid = _playerDataRepository.StorageGrid;
         for (int x = 0; x < grid.GetLength(0); x++) {
             for (int y = 0; y < grid.GetLength(1); y++) {
                 if (grid[x, y] == package.PackageId)
