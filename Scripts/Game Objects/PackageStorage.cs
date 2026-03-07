@@ -55,7 +55,7 @@ public partial class PackageStorage : Node2D {
 	// Assume valid position
 	public void MovePackage(PackageGO package, Vector2I packageTilePosition, int storageColumn, int storageRow) {
 		Vector2I offset = packageTilePosition * _tileSize;
-		package.Position = _tiles[storageColumn, storageRow]!.Position - offset;
+		package.Position = _tiles[storageColumn, storageRow]!.GlobalPosition - offset;
 		// TODO: Save updated data 
 	}
 
