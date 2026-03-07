@@ -77,7 +77,12 @@ public partial class StorageView : Node2D, IInputState {
                 _draggingPackage = false;
                 _ClearAllHighlights();
                 PackageStorage storage = _selectedStorage == PackageStorage.StorageMode.Shipping ? _shippingStorage : _packageStorage;
-                storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
+                List<Vector2I> tiles = storage.ComputeOverlappingTiles(_packages[_selectedPackage], _selectedStorageTile, _selectedPackageTile);
+                if (storage.PackagePositionIsValid(_packages[_selectedPackage], tiles)) {
+                    storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
+                } else {
+                    _selectedPackage.Position = _positionBeforeDrag;
+                }
             }
         }
 
@@ -104,7 +109,7 @@ public partial class StorageView : Node2D, IInputState {
         if (_draggingPackage) {
             return;
         }
-        
+
         // GD.Print($"HandlePackageHover {_packages[package].PackageId} {hovered}");
         if (hovered) {
             // GD.Print($"Package hovered: {_packages[package].PackageId} {tilePosition}");
