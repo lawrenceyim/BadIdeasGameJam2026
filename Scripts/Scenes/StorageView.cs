@@ -17,6 +17,10 @@ public partial class StorageView : Node2D, IInputState {
     [Export]
     private PackedScene _placeholderPackage;
 
+    // should put in Texture repo
+    [Export]
+    private Texture2D _placeholderPackageTileRed;
+
     private readonly Dictionary<PackageGO, Package> _packages = [];
     private PackageGO? _selectedPackage;
     private PackageStorage.StorageMode _selectedStorage;
@@ -174,22 +178,48 @@ public partial class StorageView : Node2D, IInputState {
 
 
     private void _CreatePlaceholderPackage() {
-        PackageGO packageGo = (PackageGO)_placeholderPackage.Instantiate();
-        packageGo.Position = new Vector2(300, 0);
-        AddChild(packageGo);
-        packageGo.Hovered += _HandlePackageHover;
-        List<Vector2I> result = packageGo.HitboxPositions
-            .Select(v => (Vector2I)v)
-            .ToList();
-        _packages[packageGo] = new Package(1, TextureId.PlaceHolder, result);
+        PackageGO one = PackageGoUtils.GenerateShape(this, [
+            new Vector2I(0, 0),
+            new Vector2I(0, 1),
+            new Vector2I(1, 0),
+            new Vector2I(1, 1)
+        ], _placeholderPackageTileRed);
+        _AddPackageGo(one, 1, new Vector2I(300, 300));
 
-        PackageGO packageGo1 = (PackageGO)_placeholderPackage.Instantiate();
-        packageGo1.Position = new Vector2(300, 300);
-        AddChild(packageGo1);
-        packageGo1.Hovered += _HandlePackageHover;
-        List<Vector2I> result1 = packageGo1.HitboxPositions
-            .Select(v => (Vector2I)v)
-            .ToList();
-        _packages[packageGo1] = new Package(2, TextureId.PlaceHolder, result);
+
+        PackageGO two = PackageGoUtils.GenerateShape(this, [
+            new Vector2I(0, 0),
+            new Vector2I(0, 1),
+            new Vector2I(0, 2),
+            new Vector2I(1, 0),
+            new Vector2I(1, 1),
+            new Vector2I(1, 2)
+        ], _placeholderPackageTileRed);
+        _AddPackageGo(two, 2, new Vector2I(300, 300));
+
+        // Old placeholder package code
+        // PackageGO packageGo = (PackageGO)_placeholderPackage.Instantiate();
+        // packageGo.Position = new Vector2(300, 0);
+        // AddChild(packageGo);
+        // packageGo.Hovered += _HandlePackageHover;
+        // List<Vector2I> result = packageGo.HitboxPositions
+        //     .Select(v => (Vector2I)v)
+        //     .ToList();
+        // _packages[packageGo] = new Package(1, TextureId.PlaceHolder, result);
+        //
+        // PackageGO packageGo1 = (PackageGO)_placeholderPackage.Instantiate();
+        // packageGo1.Position = new Vector2(300, 300);
+        // AddChild(packageGo1);
+        // packageGo1.Hovered += _HandlePackageHover;
+        // List<Vector2I> result1 = packageGo1.HitboxPositions
+        //     .Select(v => (Vector2I)v)
+        //     .ToList();
+        // _packages[packageGo1] = new Package(2, TextureId.PlaceHolder, result);
+    }
+
+    private void _AddPackageGo(PackageGO packageGo, int packageId, Vector2I position) {
+        packageGo.Position = position;
+        _packages[packageGo] = new Package(packageId, TextureId.PlaceHolder, packageGo.HitboxPositions.Select(v => (Vector2I)v).ToList());
+        packageGo.Hovered += _HandlePackageHover;
     }
 }

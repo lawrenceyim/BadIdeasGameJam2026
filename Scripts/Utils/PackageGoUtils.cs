@@ -11,6 +11,7 @@ public class PackageGoUtils {
 
         foreach (Vector2I coord in coords) {
             Sprite2D sprite = new();
+            sprite.Centered = false;
             sprite.Texture = texture;
             sprite.Position = coord * 32;
             package.AddChild(sprite);

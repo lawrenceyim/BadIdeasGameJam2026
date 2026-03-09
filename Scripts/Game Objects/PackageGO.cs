@@ -31,7 +31,7 @@ public partial class PackageGO : Sprite2D {
         foreach (Vector2I pos in HitboxPositions) {
             Area2D area = new();
             AddChild(area);
-            area.Position = new Vector2I(32 * pos.X, 32 * pos.Y);
+            area.Position = new Vector2I(32 * pos.X + 16, 32 * pos.Y + 16);
             CollisionShape2D shape = new();
             area.AddChild(shape);
             RectangleShape2D rectShape = new();
