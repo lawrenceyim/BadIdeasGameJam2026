@@ -4,6 +4,9 @@ using System.Text;
 using Godot;
 
 public partial class ShapeUtilsTest : Node {
+    [Export]
+    private Texture2D _tileTexture;
+    
     public override void _Ready() {
         List<Vector2I> shape = [
             new(0, 0),
@@ -26,6 +29,8 @@ public partial class ShapeUtilsTest : Node {
             shape = ShapeUtils.RotateCcw(shape);
             PrintShape(shape);
         }
+
+        PackageGO go = PackageGoUtils.GenerateShape(this, shape, _tileTexture);
     }
 
     void PrintShape(List<Vector2I> shape) {
