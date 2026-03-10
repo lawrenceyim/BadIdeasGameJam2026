@@ -8,11 +8,16 @@ public partial class PackageGO : Sprite2D {
         Half
     }
 
+    public event Action<PackageGO, bool, Vector2I> Hovered;
+
     [Export]
     public Vector2[] HitboxPositions { get; private set; } = [];
 
+    [Export]
+    private Texture2D _placeholderTile;
+
     private readonly Dictionary<Area2D, Vector2I> _hitboxes = [];
-    public event Action<PackageGO, bool, Vector2I> Hovered;
+    public Dictionary<Vector2I, Sprite2D> TileSprites { get; set; }
 
     public override void _Ready() {
         GD.Print("PackageGO Ready");
@@ -25,9 +30,8 @@ public partial class PackageGO : Sprite2D {
             GD.Print($"Hitbox positions is null or empty. Ending Initialize");
             return;
         }
-        
-        GD.Print($"Hitbox positions count: {HitboxPositions.Length}");
 
+        GD.Print($"Hitbox positions count: {HitboxPositions.Length}");
         foreach (Vector2I pos in HitboxPositions) {
             Area2D area = new();
             AddChild(area);
@@ -46,10 +50,12 @@ public partial class PackageGO : Sprite2D {
         }
     }
 
-
     public void SetHitboxPositions(Vector2[] positions) {
         HitboxPositions = positions;
-        Initialize("SET HIT BOX POSITION");
+    }
+
+    public void SetTileSprites(Dictionary<Vector2I, Sprite2D> tiles) {
+        TileSprites = tiles;
     }
 
     public void SetOpacity(Opacity opacity) {

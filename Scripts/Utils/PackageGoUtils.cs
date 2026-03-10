@@ -8,6 +8,7 @@ public class PackageGoUtils {
         parent.AddChild(package);
 
         int tileSize = 32;
+        Dictionary<Vector2I, Sprite2D> sprites = [];
 
         foreach (Vector2I coord in coords) {
             Sprite2D sprite = new();
@@ -15,11 +16,14 @@ public class PackageGoUtils {
             sprite.Texture = texture;
             sprite.Position = coord * 32;
             package.AddChild(sprite);
+            sprites[coord] = sprite;
         }
 
         package.SetHitboxPositions(
             coords.Select(v => new Vector2(v.X, v.Y)).ToArray()
         );
+        package.SetTileSprites(sprites);
+        package.Initialize("Utils");
         return package;
     }
 }

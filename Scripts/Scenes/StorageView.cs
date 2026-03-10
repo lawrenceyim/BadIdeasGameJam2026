@@ -23,7 +23,7 @@ public partial class StorageView : Node2D, IInputState {
 
     private readonly Dictionary<PackageGO, Package> _packages = [];
     private PackageGO? _selectedPackage;
-    private PackageStorage.StorageMode _selectedStorage;
+    private PackageStorage.StorageMode _selectedStorage = PackageStorage.StorageMode.None;
     private Vector2I _selectedStorageTile;
     private Vector2I _selectedPackageTile;
     private bool _draggingPackage = false;
@@ -48,27 +48,12 @@ public partial class StorageView : Node2D, IInputState {
         _CreatePlaceholderPackage();
     }
 
-    private void _StorageUnhovered(PackageStorage.StorageMode mode) {
-        _ClearAllHighlights();
-        _selectedStorage = PackageStorage.StorageMode.None;
-    }
-
-    private void _TileHovered(PackageStorage.StorageMode mode, Vector2I tilePosition) {
-        _selectedStorage = mode;
-        _selectedStorageTile = tilePosition;
-
-        if (!_draggingPackage) {
-            return;
-        }
-
-        _ClearAllHighlights();
-        PackageStorage storage = mode == PackageStorage.StorageMode.Shipping ? _shippingStorage : _packageStorage;
-        List<Vector2I> tilesToOccupy = storage.ComputeOverlappingTiles(_packages[_selectedPackage], _selectedStorageTile, _selectedPackageTile);
-        bool isValidPosition = storage.PackagePositionIsValid(_packages[_selectedPackage], tilesToOccupy);
-        storage.HighlightTiles(tilesToOccupy, isValidPosition ? StorageTile.Highlight.Green : StorageTile.Highlight.Red);
-    }
 
     public void ProcessInput(InputEventDto eventDto) {
+        if (eventDto is KeyDto keyDto) {
+            _HandleKeyPress(keyDto);
+        }
+
         if (eventDto is MouseButtonPressedDto && _selectedPackage != null) {
             _positionBeforeDrag = _selectedPackage.Position;
             _selectedPackage.SetOpacity(PackageGO.Opacity.Half);
@@ -104,6 +89,59 @@ public partial class StorageView : Node2D, IInputState {
 
             _selectedPackage.Position += mouseMotion.Relative;
         }
+    }
+
+    private void _StorageUnhovered(PackageStorage.StorageMode mode) {
+        _ClearAllHighlights();
+        _selectedStorage = PackageStorage.StorageMode.None;
+    }
+
+    private void _TileHovered(PackageStorage.StorageMode mode, Vector2I tilePosition) {
+        _selectedStorage = mode;
+        _selectedStorageTile = tilePosition;
+
+        if (!_draggingPackage) {
+            return;
+        }
+
+        _HighlightTiles(_packages[_selectedPackage]);
+    }
+
+    private void _HighlightTiles(Package package) {
+        _ClearAllHighlights();
+        PackageStorage storage = _selectedStorage == PackageStorage.StorageMode.Shipping ? _shippingStorage : _packageStorage;
+        List<Vector2I> tilesToOccupy = storage.ComputeOverlappingTiles(package, _selectedStorageTile, _selectedPackageTile);
+        bool isValidPosition = storage.PackagePositionIsValid(package, tilesToOccupy);
+        storage.HighlightTiles(tilesToOccupy, isValidPosition ? StorageTile.Highlight.Green : StorageTile.Highlight.Red);
+    }
+
+    private void _HandleKeyPress(KeyDto keyDto) {
+        if (keyDto.Pressed) {
+            if (keyDto.Identifier == "Q") {
+                GD.Print("Q pressed");
+                _Rotate(_selectedPackage, false);
+                _HighlightTiles(_packages[_selectedPackage]);
+            } else if (keyDto.Identifier == "E") {
+                GD.Print("E pressed");
+                _Rotate(_selectedPackage, true);
+                _HighlightTiles(_packages[_selectedPackage]);
+            }
+        }
+    }
+
+    private void _Rotate(PackageGO packageGo, bool clockWise) {
+        Dictionary<Vector2I, Vector2I> previousToNewTiles = clockWise
+            ? ShapeUtils.RotateCw(packageGo.HitboxPositions.Select(v => new Vector2I((int)v.X, (int)v.Y)).ToList())
+            : ShapeUtils.RotateCcw(packageGo.HitboxPositions.Select(v => new Vector2I((int)v.X, (int)v.Y)).ToList());
+        packageGo.SetHitboxPositions(previousToNewTiles.Values.Select(v => new Vector2(v.X, v.Y)).ToArray());
+        Dictionary<Vector2I, Sprite2D> newSpritePositions = [];
+        foreach (KeyValuePair<Vector2I, Vector2I> pair in previousToNewTiles) {
+            newSpritePositions[pair.Value] = packageGo.TileSprites[pair.Key];
+            packageGo.TileSprites[pair.Key].Position = new Vector2I(32 * pair.Value.X, 32 * pair.Value.Y);
+        }
+
+        packageGo.TileSprites = newSpritePositions;
+        _packages[packageGo].Dimensions = newSpritePositions.Keys.ToList();
     }
 
     private void _SavePackagePosition(Package package, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
@@ -196,25 +234,6 @@ public partial class StorageView : Node2D, IInputState {
             new Vector2I(1, 2)
         ], _placeholderPackageTileRed);
         _AddPackageGo(two, 2, new Vector2I(300, 300));
-
-        // Old placeholder package code
-        // PackageGO packageGo = (PackageGO)_placeholderPackage.Instantiate();
-        // packageGo.Position = new Vector2(300, 0);
-        // AddChild(packageGo);
-        // packageGo.Hovered += _HandlePackageHover;
-        // List<Vector2I> result = packageGo.HitboxPositions
-        //     .Select(v => (Vector2I)v)
-        //     .ToList();
-        // _packages[packageGo] = new Package(1, TextureId.PlaceHolder, result);
-        //
-        // PackageGO packageGo1 = (PackageGO)_placeholderPackage.Instantiate();
-        // packageGo1.Position = new Vector2(300, 300);
-        // AddChild(packageGo1);
-        // packageGo1.Hovered += _HandlePackageHover;
-        // List<Vector2I> result1 = packageGo1.HitboxPositions
-        //     .Select(v => (Vector2I)v)
-        //     .ToList();
-        // _packages[packageGo1] = new Package(2, TextureId.PlaceHolder, result);
     }
 
     private void _AddPackageGo(PackageGO packageGo, int packageId, Vector2I position) {

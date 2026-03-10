@@ -6,40 +6,38 @@ using Godot;
 public partial class ShapeUtilsTest : Node {
     [Export]
     private Texture2D _tileTexture;
-    
-    public override void _Ready() {
-        List<Vector2I> shape = [
-            new(0, 0),
-            new(1, 0),
-            new(1, 1),
-            new(1, 2),
-        ];
 
-        PrintShape(shape);
+    public override void _Ready() {
+        Dictionary<Vector2I, Vector2I> shape = new() {
+            [new Vector2I(0, 0)] = new Vector2I(0, 0),
+            [new Vector2I(1, 0)] = new Vector2I(1, 0),
+            [new Vector2I(1, 1)] = new Vector2I(1, 1),
+            [new Vector2I(1, 2)] = new Vector2I(1, 2),
+        };
 
         for (int i = 0; i < 4; i++) {
             GD.Print($"Rotated CW {i + 1} times");
-            shape = ShapeUtils.RotateCw(shape);
+            shape = ShapeUtils.RotateCw(shape.Values.ToList());
             PrintShape(shape);
         }
 
 
         for (int i = 0; i < 4; i++) {
             GD.Print($"Rotated CWW {i + 1} times");
-            shape = ShapeUtils.RotateCcw(shape);
+            shape = ShapeUtils.RotateCcw(shape.Values.ToList());
             PrintShape(shape);
         }
 
-        PackageGO go = PackageGoUtils.GenerateShape(this, shape, _tileTexture);
+        PackageGO go = PackageGoUtils.GenerateShape(this, shape.Values.ToList(), _tileTexture);
     }
 
-    void PrintShape(List<Vector2I> shape) {
-        HashSet<Vector2I> tiles = new(shape);
+    void PrintShape(Dictionary<Vector2I, Vector2I> shape) {
+        HashSet<Vector2I> tiles = new(shape.Values.ToArray());
 
-        int minX = shape.Min(p => p.X);
-        int maxX = shape.Max(p => p.X);
-        int minY = shape.Min(p => p.Y);
-        int maxY = shape.Max(p => p.Y);
+        int minX = shape.Values.Min(p => p.X);
+        int maxX = shape.Values.Max(p => p.X);
+        int minY = shape.Values.Min(p => p.Y);
+        int maxY = shape.Values.Max(p => p.Y);
 
         int width = maxX - minX + 1;
         int height = maxY - minY + 1;
