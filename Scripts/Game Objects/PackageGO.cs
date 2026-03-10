@@ -90,6 +90,6 @@ public partial class PackageGO : Node2D {
     // }
 
     public void SetOpacity(Opacity opacity) {
-        SelfModulate = new Color(1, 1, 1, opacity == Opacity.Full ? 1 : .5f);
+        Modulate = new Color(1, 1, 1, opacity == Opacity.Full ? 1 : .5f);
     }
 }
