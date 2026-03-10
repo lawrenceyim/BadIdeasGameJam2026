@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cm6d1r4ntvo5g" path="res://Scripts/Game Objects/PackageStorage.cs" id="1_dwnrq"]
 [ext_resource type="PackedScene" uid="uid://c0g33a0t0ufof" path="res://Scenes/Game Object/StorageTile.tscn" id="2_r3p4v"]
-[ext_resource type="PackedScene" uid="uid://cn2cwdbd8nm51" path="res://Scenes/Game Object/Package.tscn" id="3_2yuej"]
 
 [node name="PackageStorage" type="Node2D" unique_id=882079434]
 script = ExtResource("1_dwnrq")
 _placeholderTile = ExtResource("2_r3p4v")
-_placeholderPackage = ExtResource("3_2yuej")

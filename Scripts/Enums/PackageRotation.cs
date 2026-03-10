@@ -1,6 +1,6 @@
 public enum PackageRotation {
-    Zero, // Upright
-    Ninety, // Rotated right once
-    OneEighty, // Rotated right twice
-    TwoSeventy, // Rotated right three times
+    Zero = 0, // Upright
+    Ninety = 1, // Rotated right once
+    OneEighty = 2, // Rotated right twice
+    TwoSeventy = 3, // Rotated right three times
 }
