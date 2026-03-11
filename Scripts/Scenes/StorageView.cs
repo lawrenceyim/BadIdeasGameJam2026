@@ -37,8 +37,6 @@ public partial class StorageView : Node2D, IInputState {
 		RepositoryLocator repositoryLocator = serviceLocator.GetService<RepositoryLocator>();
 		_playerDataRepository = repositoryLocator.GetRepository<PlayerDataRepository>(RepositoryName.PlayerData);
 
-		_packageStorage.Position = new Vector2(-300, 0);
-		_shippingStorage.Position = new Vector2(300, 0);
 		_packageStorage.Initialize(new Vector2I(32, 32), PackageStorage.StorageMode.Storage);
 		_shippingStorage.Initialize(new Vector2I(32, 32), PackageStorage.StorageMode.Shipping);
 		_packageStorage.TileHovered += _TileHovered;
@@ -70,7 +68,7 @@ public partial class StorageView : Node2D, IInputState {
 				List<Vector2I> tiles = storage.ComputeOverlappingTiles(_packages[_selectedPackage], _selectedStorageTile, _selectedPackageTile);
 				if (storage.PackagePositionIsValid(_packages[_selectedPackage], tiles)) {
 					storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
-					_RemovePackagePosition(_packages[_selectedPackage], tiles);
+					_RemovePackagePosition(_packages[_selectedPackage]);
 					_SavePackagePosition(_packages[_selectedPackage], tiles, _selectedStorage);
 				} else {
 					_selectedPackage.Position = _positionBeforeDrag;
@@ -166,7 +164,7 @@ public partial class StorageView : Node2D, IInputState {
 		)}");
 	}
 
-	private void _RemovePackagePosition(Package package, List<Vector2I> tiles) {
+	private void _RemovePackagePosition(Package package) {
 		int[,] grid = _playerDataRepository.ShippingGrid;
 		for (int x = 0; x < grid.GetLength(0); x++) {
 			for (int y = 0; y < grid.GetLength(1); y++) {
@@ -184,11 +182,11 @@ public partial class StorageView : Node2D, IInputState {
 		}
 
 		GD.Print($"Removed package {package.PackageId}.\n{string.Join("\n",
-            Enumerable.Range(0, grid.GetLength(0))
+		    Enumerable.Range(0, grid.GetLength(1))
 				.Select(y => string.Join(" ",
-                    Enumerable.Range(0, grid.GetLength(1))
-                        .Select(x => grid[x, y])
-                ))
+		            Enumerable.Range(0, grid.GetLength(0))
+		                .Select(x => grid[x, y])
+		        ))
 		)}");
 	}
 
