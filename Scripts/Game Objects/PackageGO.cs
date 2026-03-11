@@ -22,19 +22,17 @@ public partial class PackageGO : Node2D {
     public override void _Ready() {
         _sprite = new Sprite2D();
         AddChild(_sprite);
-
-        GD.Print("PackageGO Ready");
         Initialize("READY");
     }
 
     public void Initialize(string context) {
-        GD.Print($"Initialize called from {context}.");
+        // GD.Print($"Initialize called from {context}.");
         if (HitboxPositions is null || HitboxPositions.Count == 0) {
-            GD.Print($"Hitbox positions is null or empty. Ending Initialize");
+            // GD.Print($"Hitbox positions is null or empty. Ending Initialize");
             return;
         }
 
-        GD.Print($"Hitbox positions count: {HitboxPositions.Count}");
+        // GD.Print($"Hitbox positions count: {HitboxPositions.Count}");
         foreach (Vector2I pos in HitboxPositions) {
             Area2D area = new();
             AddChild(area);
@@ -61,7 +59,6 @@ public partial class PackageGO : Node2D {
             PackageRotation.OneEighty => 180,
             PackageRotation.TwoSeventy => 270
         });
-        GD.Print($"Sprite Rotation: {_sprite.Rotation}");
         _sprite.Position = _ComputeSpritePosition();
     }
 
