@@ -17,8 +17,6 @@ public partial class PackageGO : Node2D {
     private Texture2D _placeholderTile;
 
     private readonly Dictionary<Area2D, Vector2I> _hitboxes = [];
-
-    // public Dictionary<Vector2I, Sprite2D> TileSprites { get; set; }
     private Sprite2D _sprite;
 
     public override void _Ready() {

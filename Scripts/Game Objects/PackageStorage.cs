@@ -14,8 +14,9 @@ using ServiceSystem;
 public partial class PackageStorage : Node2D {
     public enum StorageMode {
         None,
-        Storage,
+        Holding,
         Shipping,
+        Storage,
     }
 
     public event Action<StorageMode, Vector2I> TileHovered;
@@ -43,8 +44,8 @@ public partial class PackageStorage : Node2D {
         _mode = storageMode;
         _tileSize = tileSize;
         // TODO: DI of grid lengths based on which storage to check for
-        _columns = storageMode == StorageMode.Shipping ? PlayerDataRepository.ShippingGridColumns : PlayerDataRepository.StorageGridColumns;
-        _rows = storageMode == StorageMode.Shipping ? PlayerDataRepository.ShippingGridRows : PlayerDataRepository.StorageGridRows;
+        _columns = StorageUtils.GetStorageColumns(storageMode);
+        _rows = StorageUtils.GetStorageRows(storageMode);
         _tiles = new StorageTile[_columns, _rows];
         _CreateGrid(_columns, _rows, tileSize);
 
@@ -115,7 +116,7 @@ public partial class PackageStorage : Node2D {
     }
 
     public bool PackagePositionIsValid(Package package, List<Vector2I> positionsToCheck) {
-        int[,] grid = _mode == StorageMode.Shipping ? _playerDataRepository.ShippingGrid : _playerDataRepository.StorageGrid;
+        int[,] grid = StorageUtils.GetStorageGrid(_mode);
 
         foreach (Vector2I position in positionsToCheck) {
             if (!_IsInsideGrid(position, _columns, _rows)) {

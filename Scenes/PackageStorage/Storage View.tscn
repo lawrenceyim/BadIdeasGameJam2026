@@ -6,8 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://ritd0etiu2fm" path="res://Assets/Sprites/Placeholder/ui mockup.webp" id="5_8bmbm"]
 [ext_resource type="Texture2D" uid="uid://ddb2b0dehrwn0" path="res://Assets/Sprites/Placeholder/64 by 128 placeholder.png" id="5_nbya6"]
 
-[node name="Node2D" type="Node2D" unique_id=292242860 node_paths=PackedStringArray("_packageStorage", "_shippingStorage")]
+[node name="Node2D" type="Node2D" unique_id=292242860 node_paths=PackedStringArray("_holdingStorage", "_packageStorage", "_shippingStorage")]
 script = ExtResource("1_hmwcn")
+_holdingStorage = NodePath("Holding Storage")
 _packageStorage = NodePath("Package Storage")
 _shippingStorage = NodePath("Shipping Storage")
 _placeholderPackageTileRed = ExtResource("3_6a4eg")
@@ -19,6 +20,9 @@ scale = Vector2(1.2490244, 1.2328473)
 texture = ExtResource("5_8bmbm")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1338915600]
+
+[node name="Holding Storage" parent="." unique_id=432576357 instance=ExtResource("2_51nkb")]
+position = Vector2(-59, 40)
 
 [node name="Shipping Storage" parent="." unique_id=2087576014 instance=ExtResource("2_51nkb")]
 position = Vector2(265, -173)

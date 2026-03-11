@@ -2,11 +2,15 @@ using System.Collections.Generic;
 using RepositorySystem;
 
 public class PlayerDataRepository : IRepository {
-    public static int StorageGridColumns = 8;
-    public static int StorageGridRows = 9;
+    public static int HoldingGridColumns = 4;
+    public static int HoldingGridRows = 3;
     public static int ShippingGridColumns = 6;
     public static int ShippingGridRows = 9;
-    public List<Package> Packages { get; } = [];
-    public int[,] StorageGrid { get; } = new int[StorageGridColumns, StorageGridRows];
-    public int[,] ShippingGrid { get; } = new int[ShippingGridColumns, ShippingGridRows];
+    public static int StorageGridColumns = 8;
+    public static int StorageGridRows = 9;
+
+    public static List<Package> Packages { get; } = [];
+    public static int[,] HoldingGrid { get; } = new int[HoldingGridColumns, HoldingGridRows];
+    public static int[,] ShippingGrid { get; } = new int[ShippingGridColumns, ShippingGridRows];
+    public static int[,] StorageGrid { get; } = new int[StorageGridColumns, StorageGridRows];
 }
