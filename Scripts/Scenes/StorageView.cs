@@ -108,9 +108,19 @@ public partial class StorageView : Node2D, IInputState {
     }
 
     private void _SnapPackageBackToLastValidPosition() {
+        Package package = _packages[_selectedPackage];
+        PackageRotation current = package.Rotation;
+        List<Vector2I> tiles = package.Dimensions;
+        while (current != _rotationBeforeDrag) {
+            tiles = ShapeUtils.RotateCw(package.Dimensions).Values.ToList();
+            current = (PackageRotation)(((int)current + 5) % 4);
+        }
+
         _selectedPackage.Position = _positionBeforeDrag;
         _selectedPackage.RotateSprite(_rotationBeforeDrag);
         _packages[_selectedPackage].Rotation = _rotationBeforeDrag;
+        package.Dimensions = tiles;
+        _selectedPackage.SetHitboxPositions(tiles);
     }
 
     private void _StorageUnhovered(PackageStorage.StorageMode mode) {
