@@ -155,21 +155,20 @@ public partial class StorageView : Node2D, IInputState {
     private void _HandleKeyPress(KeyDto keyDto) {
         if (keyDto.Pressed) {
             if (keyDto.Identifier == "Q") {
-                if (_selectedPackage is null) {
-                    return;
-                }
-
-                _Rotate(_selectedPackage, false);
-                _HighlightTiles(_packages[_selectedPackage]);
+                _RotatePressed(false);
             } else if (keyDto.Identifier == "E") {
-                if (_selectedPackage is null) {
-                    return;
-                }
-
-                _Rotate(_selectedPackage, true);
-                _HighlightTiles(_packages[_selectedPackage]);
+                _RotatePressed(true);
             }
         }
+    }
+
+    private void _RotatePressed(bool cw) {
+        if (!_draggingPackage) {
+            return;
+        }
+
+        _Rotate(_selectedPackage, cw);
+        _HighlightTiles(_packages[_selectedPackage]);
     }
 
     private void _Rotate(PackageGO packageGo, bool clockWise) {
