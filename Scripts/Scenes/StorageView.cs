@@ -146,7 +146,6 @@ public partial class StorageView : Node2D, IInputState {
             return;
         }
 
-        GD.Print($"Highlight package rotation {package.Rotation}");
         PackageStorage storage = _GetPackageStorage(_selectedStorage);
         List<Vector2I> tilesToOccupy = storage.ComputeOverlappingTiles(package, _selectedStorageTile, _selectedPackageTile);
         bool isValidPosition = storage.PackagePositionIsValid(package, tilesToOccupy);

@@ -64,6 +64,12 @@ public partial class PackageGO : Node2D {
 
     public void SetHitboxPositions(List<Vector2I> positions) {
         HitboxPositions = positions;
+        int i = 0;
+        foreach (Area2D area in _hitboxes.Keys) {
+            Vector2I pos = positions[i++];
+            _hitboxes[area] = pos;
+            area.Position = new Vector2I(TileInfo.TileSize * pos.X, TileInfo.TileSize * pos.Y) + new Vector2I(TileInfo.TileSize, TileInfo.TileSize) / 2;
+        }
     }
 
     // Cannot set sprite as centered because it skews the rotation
@@ -79,10 +85,6 @@ public partial class PackageGO : Node2D {
         int maxY = HitboxPositions.Max(pos => pos.Y);
         return new Vector2I(maxX * TileInfo.TileSize, maxY * TileInfo.TileSize) / 2 + new Vector2I(TileInfo.TileSize, TileInfo.TileSize) / 2;
     }
-
-    // public void SetTileSprites(Dictionary<Vector2I, Sprite2D> tiles) {
-    //     TileSprites = tiles;
-    // }
 
     public void SetOpacity(Opacity opacity) {
         Modulate = new Color(1, 1, 1, opacity == Opacity.Full ? 1 : .5f);
