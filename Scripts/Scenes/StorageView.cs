@@ -79,6 +79,7 @@ public partial class StorageView : Node2D, IInputState {
     }
 
     private void _HandleMouseButtonPress() {
+        GD.Print($"Position before drag {_selectedPackage?.Position}");
         _positionBeforeDrag = _selectedPackage.Position;
         _rotationBeforeDrag = _packages[_selectedPackage].Rotation;
         _selectedPackage.SetOpacity(PackageGO.Opacity.Half);
@@ -116,11 +117,12 @@ public partial class StorageView : Node2D, IInputState {
             current = (PackageRotation)(((int)current + 5) % 4);
         }
 
-        _selectedPackage.Position = _positionBeforeDrag;
-        _selectedPackage.RotateSprite(_rotationBeforeDrag);
         _packages[_selectedPackage].Rotation = _rotationBeforeDrag;
         package.Dimensions = tiles;
         _selectedPackage.SetHitboxPositions(tiles);
+        _selectedPackage.RotateSprite(_rotationBeforeDrag);
+        _selectedPackage.Position = _positionBeforeDrag;
+        GD.Print($"Position after snapping back to last valid position {_selectedPackage?.Position}");
     }
 
     private void _StorageUnhovered(PackageStorage.StorageMode mode) {
