@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using Godot;
 
 public class PackageGoUtils {
-    public static PackageGO GenerateShape(Node parent, List<Vector2I> coords, Texture2D texture) {
+    public static PackageGO GenerateShape(Node parent, List<Vector2I> coords, Texture2D texture, PackageRotation rotation) {
         PackageGO package = new();
         parent.AddChild(package);
-        
+
         // Dictionary<Vector2I, Sprite2D> sprites = [];
         //
         // foreach (Vector2I coord in coords) {
@@ -17,7 +17,7 @@ public class PackageGoUtils {
         //     sprites[coord] = sprite;
         // }
 
-        package.SetHitboxPositions(coords);
+        package.SetHitBoxAndRotateSprite(coords, rotation);
         // package.SetTileSprites(sprites);
         package.Initialize("Utils");
         package.SetTexture(texture);

@@ -50,9 +50,14 @@ public partial class PackageGO : Node2D {
             kvp.Key.MouseExited += () => Hovered?.Invoke(this, false, _hitboxes[kvp.Key]);
         }
     }
-
+    
+    public void SetHitBoxAndRotateSprite(List<Vector2I> positions, PackageRotation packageRotation) {
+        _SetHitboxPositions(positions);   
+        _RotateSprite(packageRotation);
+    }
+    
     // New hitbox positions must be set first
-    public void RotateSprite(PackageRotation packageRotation) {
+    private void _RotateSprite(PackageRotation packageRotation) {
         _sprite.Rotation = Mathf.DegToRad(packageRotation switch {
             PackageRotation.Zero => 0,
             PackageRotation.Ninety => 90,
@@ -62,7 +67,7 @@ public partial class PackageGO : Node2D {
         _sprite.Position = _ComputeSpritePosition();
     }
 
-    public void SetHitboxPositions(List<Vector2I> positions) {
+    private void _SetHitboxPositions(List<Vector2I> positions) {
         HitboxPositions = positions;
         int i = 0;
         foreach (Area2D area in _hitboxes.Keys) {

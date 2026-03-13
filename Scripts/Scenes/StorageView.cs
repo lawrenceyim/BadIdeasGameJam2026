@@ -119,8 +119,7 @@ public partial class StorageView : Node2D, IInputState {
 
         _packages[_selectedPackage].Rotation = _rotationBeforeDrag;
         package.Dimensions = tiles;
-        _selectedPackage.SetHitboxPositions(tiles);
-        _selectedPackage.RotateSprite(_rotationBeforeDrag);
+        _selectedPackage.SetHitBoxAndRotateSprite(tiles, _rotationBeforeDrag);
         _selectedPackage.Position = _positionBeforeDrag;
         GD.Print($"Position after snapping back to last valid position {_selectedPackage?.Position}");
     }
@@ -177,12 +176,11 @@ public partial class StorageView : Node2D, IInputState {
         Dictionary<Vector2I, Vector2I> previousToNewTiles = clockWise
             ? ShapeUtils.RotateCw(packageGo.HitboxPositions.Select(v => new Vector2I(v.X, v.Y)).ToList())
             : ShapeUtils.RotateCcw(packageGo.HitboxPositions.Select(v => new Vector2I(v.X, v.Y)).ToList());
-        packageGo.SetHitboxPositions(previousToNewTiles.Values.ToList());
         Package package = _packages[packageGo];
         package.Dimensions = previousToNewTiles.Values.ToList();
         // Add 4 to avoid a situation where rotation is 0, and turning CCW makes it -1, resulting in invalid enum
         package.Rotation = (PackageRotation)(((int)package.Rotation + 4 + (clockWise ? 1 : -1)) % 4);
-        packageGo.RotateSprite(package.Rotation);
+        packageGo.SetHitBoxAndRotateSprite(previousToNewTiles.Values.ToList(), package.Rotation);
     }
 
     private void _SavePackagePosition(Package package, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
@@ -249,16 +247,20 @@ public partial class StorageView : Node2D, IInputState {
 
 
     private void _CreatePlaceholderPackage() {
-        PackageGO one = PackageGoUtils.GenerateShape(this, [
-            new Vector2I(0, 0),
-            new Vector2I(0, 1),
-            new Vector2I(0, 2),
-            new Vector2I(0, 3),
-            new Vector2I(1, 0),
-            new Vector2I(1, 1),
-            new Vector2I(1, 2),
-            new Vector2I(1, 3)
-        ], _placeholder64By128Package);
+        PackageGO one = PackageGoUtils.GenerateShape(
+            this,
+            [
+                new Vector2I(0, 0),
+                new Vector2I(0, 1),
+                new Vector2I(0, 2),
+                new Vector2I(0, 3),
+                new Vector2I(1, 0),
+                new Vector2I(1, 1),
+                new Vector2I(1, 2),
+                new Vector2I(1, 3)
+            ],
+            _placeholder64By128Package,
+            PackageRotation.Zero);
         _AddPackageGo(one, 1, new Vector2I(300, 0));
     }
 
