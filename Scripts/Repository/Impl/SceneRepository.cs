@@ -14,6 +14,10 @@ public partial class SceneRepository : Node, IAutoload, IRepository {
 }
 
 public enum SceneId {
+    MainMenu = 1,
+    CustomerView = 1_001,
+    StorageView = 1_002,
+
     TestScene1 = 10_0001,
     TestScene2 = 10_0002,
 }

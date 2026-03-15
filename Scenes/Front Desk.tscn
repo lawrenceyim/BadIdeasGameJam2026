@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c5y0i61vd38l6"]
+
+[ext_resource type="Texture2D" uid="uid://bskmoij1f60th" path="res://Assets/Sprites/Environments/Front Desk.png" id="1_ek0h5"]
+
+[node name="Node2D" type="Node2D" unique_id=2011687834]
+
+[node name="FrontDesk" type="Sprite2D" parent="." unique_id=1440994048]
+scale = Vector2(0.445, 0.445)
+texture = ExtResource("1_ek0h5")
