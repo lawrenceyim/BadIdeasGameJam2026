@@ -14,11 +14,6 @@ public class SceneManager : IService {
         _currentSceneId = sceneId;
         Node instance = _sceneRepository.GetPackedScene(sceneId).Instantiate();
 
-        if (instance is IScene scene) {
-            GD.Print($"scene is IScene");
-            scene.InitScene(jsonParameters);
-        }
-
         if (Engine.GetMainLoop() is not SceneTree sceneTree) {
             GD.Print($"Scene tree is null");
             return;
@@ -26,6 +21,11 @@ public class SceneManager : IService {
 
         sceneTree.CurrentScene?.QueueFree();
         sceneTree.Root.AddChild(instance);
+        if (instance is IScene scene) {
+            GD.Print($"scene is IScene");
+            scene.InitScene(jsonParameters);
+        }
+
         sceneTree.CurrentScene = instance;
     }
 

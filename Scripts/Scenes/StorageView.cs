@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using InputSystem;
-using RepositorySystem;
 using ServiceSystem;
 
 public partial class StorageView : Node2D, IInputState {
@@ -31,11 +30,14 @@ public partial class StorageView : Node2D, IInputState {
     private bool _draggingPackage = false;
     private Vector2 _positionBeforeDrag;
     private PackageRotation _rotationBeforeDrag = PackageRotation.Zero;
+    private InputStateMachine _inputStateMachine;
+    private SceneManager _sceneManager;
 
     public override void _Ready() {
         ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
-        InputStateMachine inputStateMachine = serviceLocator.GetService<InputStateMachine>();
-        inputStateMachine.SetState(this);
+        _sceneManager = serviceLocator.GetService<SceneManager>();
+        _inputStateMachine = serviceLocator.GetService<InputStateMachine>();
+        _inputStateMachine.SetState(this);
 
         _holdingStorage.Initialize(TileInfo.TileSizeVector, PackageStorage.StorageMode.Holding);
         _packageStorage.Initialize(TileInfo.TileSizeVector, PackageStorage.StorageMode.Storage);
@@ -49,7 +51,6 @@ public partial class StorageView : Node2D, IInputState {
 
         _CreatePlaceholderPackage();
     }
-
 
     public void ProcessInput(InputEventDto eventDto) {
         if (eventDto is KeyDto keyDto) {
@@ -155,7 +156,10 @@ public partial class StorageView : Node2D, IInputState {
 
     private void _HandleKeyPress(KeyDto keyDto) {
         if (keyDto.Pressed) {
-            if (keyDto.Identifier == "Q") {
+            if (keyDto.Identifier == "Space") {
+                GD.Print("Space pressed to switch scene");
+                _sceneManager.ChangeScene(SceneId.CustomerView, string.Empty);
+            } else if (keyDto.Identifier == "Q") {
                 _RotatePressed(false);
             } else if (keyDto.Identifier == "E") {
                 _RotatePressed(true);
