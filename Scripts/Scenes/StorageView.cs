@@ -102,7 +102,7 @@ public partial class StorageView : Node2D, IInputState {
             if (storage.PackagePositionIsValid(_packages[_selectedPackage], tiles)) {
                 storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
                 _RemovePackagePosition(_packages[_selectedPackage]);
-                _SavePackagePosition(_packages[_selectedPackage], tiles, _selectedStorage);
+                _SavePackagePosition(_packages[_selectedPackage], _selectedPackage, tiles, _selectedStorage);
             } else {
                 _SnapPackageBackToLastValidPosition();
             }
@@ -187,12 +187,15 @@ public partial class StorageView : Node2D, IInputState {
         packageGo.SetHitBoxAndRotateSprite(previousToNewTiles.Values.ToList(), package.Rotation);
     }
 
-    private void _SavePackagePosition(Package package, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
+    private void _SavePackagePosition(Package package, PackageGO packageGo, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
         int[,] grid = StorageUtils.GetStorageGrid(storageMode);
         foreach (Vector2I tile in tiles) {
             GD.Print($"Saving tile {tile} in {storageMode}");
             grid[tile.X, tile.Y] = package.PackageId;
         }
+
+        Dictionary<Package, Vector2> storage = StorageUtils.GetPackageDict(storageMode);
+        storage[package] = packageGo.Position;
 
         GD.Print($"Saved package {package.PackageId} in {storageMode} \n{string.Join("\n",
             Enumerable.Range(0, grid.GetLength(1))
@@ -204,19 +207,17 @@ public partial class StorageView : Node2D, IInputState {
     }
 
     private void _RemovePackagePosition(Package package) {
-        List<int[,]> storages = [
-            PlayerDataRepository.HoldingGrid,
-            PlayerDataRepository.ShippingGrid,
-            PlayerDataRepository.StorageGrid,
-        ];
-
-        foreach (int[,] storage in storages) {
+        foreach (int[,] storage in StorageUtils.StorageGrids) {
             for (int x = 0; x < storage.GetLength(0); x++) {
                 for (int y = 0; y < storage.GetLength(1); y++) {
                     if (storage[x, y] == package.PackageId)
                         storage[x, y] = 0;
                 }
             }
+        }
+
+        foreach (Dictionary<Package, Vector2> storage in StorageUtils.Storages) {
+            storage.Remove(package);
         }
     }
 
@@ -249,6 +250,13 @@ public partial class StorageView : Node2D, IInputState {
         _selectedStorage = PackageStorage.StorageMode.None;
     }
 
+    private void _InitPackages() {
+        foreach (Dictionary<Package, Vector2> packages in StorageUtils.Storages) {
+            foreach (KeyValuePair<Package, Vector2> kvp in packages) {
+                // TODO: Create packages
+            }
+        }
+    }
 
     private void _CreatePlaceholderPackage() {
         PackageGO one = PackageGoUtils.GenerateShape(
@@ -270,7 +278,7 @@ public partial class StorageView : Node2D, IInputState {
 
     private void _AddPackageGo(PackageGO packageGo, int packageId, Vector2I position) {
         packageGo.Position = position;
-        _packages[packageGo] = new Package(packageId, TextureId.PlaceHolder, packageGo.HitboxPositions.Select(v => (Vector2I)v).ToList());
+        _packages[packageGo] = new Package(packageId, TextureId.PlaceHolder, packageGo.HitboxPositions.Select(v => (Vector2I)v).ToList(), 10);
         packageGo.Hovered += _HandlePackageHover;
     }
 

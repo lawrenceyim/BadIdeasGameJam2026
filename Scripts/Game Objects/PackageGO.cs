@@ -11,6 +11,7 @@ public partial class PackageGO : Node2D {
 
     public event Action<PackageGO, bool, Vector2I> Hovered;
 
+    // Probably should get this from the Packagge instead of duplicating data
     public List<Vector2I> HitboxPositions { get; private set; } = [];
 
     [Export]
