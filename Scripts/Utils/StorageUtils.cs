@@ -2,6 +2,16 @@ using System.Collections.Generic;
 using Godot;
 
 public class StorageUtils {
+    public static int GetTotalWeight(PackageStorage.StorageMode mode) {
+        Dictionary<Package, Vector2> dict = GetPackageDict(mode);
+        int totalWeight = 0;
+        foreach (Package package in dict.Keys) {
+            totalWeight += package.Weight;
+        }
+
+        return totalWeight;
+    }
+
     public static List<int[,]> StorageGrids { get; } = [
         PlayerDataRepository.HoldingGrid,
         PlayerDataRepository.ShippingGrid,

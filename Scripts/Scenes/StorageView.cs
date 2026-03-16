@@ -103,6 +103,7 @@ public partial class StorageView : Node2D, IInputState {
                 storage.MovePackage(_selectedPackage, _selectedPackageTile, _selectedStorageTile.X, _selectedStorageTile.Y);
                 _RemovePackagePosition(_packages[_selectedPackage]);
                 _SavePackagePosition(_packages[_selectedPackage], _selectedPackage, tiles, _selectedStorage);
+                _UpdateStorageWeightDisplay();
             } else {
                 _SnapPackageBackToLastValidPosition();
             }
@@ -225,6 +226,12 @@ public partial class StorageView : Node2D, IInputState {
         _holdingStorage.ClearAllHighlights();
         _packageStorage.ClearAllHighlights();
         _shippingStorage.ClearAllHighlights();
+    }
+
+    private void _UpdateStorageWeightDisplay() {
+        // TODO: update a UI
+        int weightOfShipping = StorageUtils.GetTotalWeight(PackageStorage.StorageMode.Shipping);
+        int weightOfStorage = StorageUtils.GetTotalWeight(PackageStorage.StorageMode.Storage);
     }
 
     private void _HandlePackageHover(PackageGO package, bool hovered, Vector2I tilePosition) {
