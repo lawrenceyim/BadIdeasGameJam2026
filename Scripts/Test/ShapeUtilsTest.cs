@@ -28,7 +28,7 @@ public partial class ShapeUtilsTest : Node {
             PrintShape(shape);
         }
 
-        PackageGO go = PackageGoUtils.GenerateShape(this, shape.Values.ToList(), _tileTexture);
+        PackageGO go = PackageGoUtils.GenerateShape(this, shape.Values.ToList(), _tileTexture, PackageRotation.Zero);
     }
 
     void PrintShape(Dictionary<Vector2I, Vector2I> shape) {

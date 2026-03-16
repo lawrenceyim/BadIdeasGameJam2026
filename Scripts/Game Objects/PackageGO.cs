@@ -11,32 +11,29 @@ public partial class PackageGO : Node2D {
 
     public event Action<PackageGO, bool, Vector2I> Hovered;
 
+    // Probably should get this from the Packagge instead of duplicating data
     public List<Vector2I> HitboxPositions { get; private set; } = [];
 
     [Export]
     private Texture2D _placeholderTile;
 
     private readonly Dictionary<Area2D, Vector2I> _hitboxes = [];
-
-    // public Dictionary<Vector2I, Sprite2D> TileSprites { get; set; }
     private Sprite2D _sprite;
 
     public override void _Ready() {
         _sprite = new Sprite2D();
         AddChild(_sprite);
-
-        GD.Print("PackageGO Ready");
         Initialize("READY");
     }
 
     public void Initialize(string context) {
-        GD.Print($"Initialize called from {context}.");
+        // GD.Print($"Initialize called from {context}.");
         if (HitboxPositions is null || HitboxPositions.Count == 0) {
-            GD.Print($"Hitbox positions is null or empty. Ending Initialize");
+            // GD.Print($"Hitbox positions is null or empty. Ending Initialize");
             return;
         }
 
-        GD.Print($"Hitbox positions count: {HitboxPositions.Count}");
+        // GD.Print($"Hitbox positions count: {HitboxPositions.Count}");
         foreach (Vector2I pos in HitboxPositions) {
             Area2D area = new();
             AddChild(area);
@@ -54,21 +51,31 @@ public partial class PackageGO : Node2D {
             kvp.Key.MouseExited += () => Hovered?.Invoke(this, false, _hitboxes[kvp.Key]);
         }
     }
-
+    
+    public void SetHitBoxAndRotateSprite(List<Vector2I> positions, PackageRotation packageRotation) {
+        _SetHitboxPositions(positions);   
+        _RotateSprite(packageRotation);
+    }
+    
     // New hitbox positions must be set first
-    public void RotateSprite(PackageRotation packageRotation) {
+    private void _RotateSprite(PackageRotation packageRotation) {
         _sprite.Rotation = Mathf.DegToRad(packageRotation switch {
             PackageRotation.Zero => 0,
             PackageRotation.Ninety => 90,
             PackageRotation.OneEighty => 180,
             PackageRotation.TwoSeventy => 270
         });
-        GD.Print($"Sprite Rotation: {_sprite.Rotation}");
         _sprite.Position = _ComputeSpritePosition();
     }
 
-    public void SetHitboxPositions(List<Vector2I> positions) {
+    private void _SetHitboxPositions(List<Vector2I> positions) {
         HitboxPositions = positions;
+        int i = 0;
+        foreach (Area2D area in _hitboxes.Keys) {
+            Vector2I pos = positions[i++];
+            _hitboxes[area] = pos;
+            area.Position = new Vector2I(TileInfo.TileSize * pos.X, TileInfo.TileSize * pos.Y) + new Vector2I(TileInfo.TileSize, TileInfo.TileSize) / 2;
+        }
     }
 
     // Cannot set sprite as centered because it skews the rotation
@@ -84,10 +91,6 @@ public partial class PackageGO : Node2D {
         int maxY = HitboxPositions.Max(pos => pos.Y);
         return new Vector2I(maxX * TileInfo.TileSize, maxY * TileInfo.TileSize) / 2 + new Vector2I(TileInfo.TileSize, TileInfo.TileSize) / 2;
     }
-
-    // public void SetTileSprites(Dictionary<Vector2I, Sprite2D> tiles) {
-    //     TileSprites = tiles;
-    // }
 
     public void SetOpacity(Opacity opacity) {
         Modulate = new Color(1, 1, 1, opacity == Opacity.Full ? 1 : .5f);

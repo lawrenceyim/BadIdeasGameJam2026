@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://c5y0i61vd38l6"]
+
+[ext_resource type="Script" uid="uid://dg25m8gt5sll4" path="res://Scripts/Scenes/CustomerView.cs" id="1_0gx8r"]
+[ext_resource type="Texture2D" uid="uid://bskmoij1f60th" path="res://Assets/Sprites/Environments/Front Desk.png" id="1_k2ue8"]
+
+[node name="Node2D" type="Node2D" unique_id=2011687834]
+script = ExtResource("1_0gx8r")
+
+[node name="FrontDesk" type="Sprite2D" parent="." unique_id=1440994048]
+scale = Vector2(0.445, 0.445)
+texture = ExtResource("1_k2ue8")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2045096297]
