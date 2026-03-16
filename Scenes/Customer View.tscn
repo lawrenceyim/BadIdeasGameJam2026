@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dg25m8gt5sll4" path="res://Scripts/Scenes/CustomerView.cs" id="1_0gx8r"]
 [ext_resource type="Texture2D" uid="uid://bskmoij1f60th" path="res://Assets/Sprites/Environments/Front Desk.png" id="1_k2ue8"]
+[ext_resource type="Texture2D" uid="uid://dmjmldxsucn3q" path="res://Assets/Sprites/Environments/Counter.png" id="3_c4o6i"]
+[ext_resource type="Texture2D" uid="uid://dyt2o1cs6myje" path="res://Assets/Sprites/Environments/Label Cabinet.png" id="4_yy4qc"]
+[ext_resource type="Texture2D" uid="uid://dvyumi2xrf1nj" path="res://Assets/Sprites/Environments/Register.png" id="5_mh7xh"]
 
 [node name="Node2D" type="Node2D" unique_id=2011687834]
 script = ExtResource("1_0gx8r")
@@ -11,3 +14,17 @@ scale = Vector2(0.445, 0.445)
 texture = ExtResource("1_k2ue8")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2045096297]
+
+[node name="Counter" type="Sprite2D" parent="." unique_id=1665809901]
+scale = Vector2(0.445, 0.445)
+texture = ExtResource("3_c4o6i")
+
+[node name="LabelCabinet" type="Sprite2D" parent="." unique_id=1180922315]
+position = Vector2(-476, 172.00002)
+scale = Vector2(0.445, 0.445)
+texture = ExtResource("4_yy4qc")
+
+[node name="Register" type="Sprite2D" parent="." unique_id=1448282887]
+position = Vector2(531.00006, 224.00002)
+scale = Vector2(0.445, 0.445)
+texture = ExtResource("5_mh7xh")
