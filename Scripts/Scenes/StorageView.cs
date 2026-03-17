@@ -30,7 +30,8 @@ public partial class StorageView : Node2D, IInputState {
     private Vector2I _selectedPackageTile;
     private bool _draggingPackage = false;
     private Vector2 _positionBeforeDrag;
-    private PackageRotation _rotationBeforeDrag = PackageRotation.Zero;
+    private List<Vector2I> _hitboxesBeforeRotation = [];
+    private PackageOrientation _orientationBeforeDrag = PackageOrientation.Up;
     private InputStateMachine _inputStateMachine;
     private SceneManager _sceneManager;
 
@@ -59,8 +60,8 @@ public partial class StorageView : Node2D, IInputState {
             _HandleKeyPress(keyDto);
         }
 
-        if (eventDto is MouseButtonPressedDto && _selectedPackage != null) {
-            _HandleMouseButtonPress();
+        if (eventDto is MouseButtonPressedDto mouseButtonPressedDto && _selectedPackage != null) {
+            _HandleMouseButtonPress(mouseButtonPressedDto);
         }
 
         if (eventDto is MouseButtonReleasedDto) {
@@ -81,11 +82,15 @@ public partial class StorageView : Node2D, IInputState {
         }
     }
 
-    private void _HandleMouseButtonPress() {
-        GD.Print($"Position before drag {_selectedPackage?.Position}");
+    private void _HandleMouseButtonPress(MouseButtonPressedDto mouseButtonPressedDto) {
+        if (mouseButtonPressedDto.Identifier != "Left") {
+            return;
+        }
+
+        _hitboxesBeforeRotation = _packages[_selectedPackage].Dimensions;
         _positionBeforeDrag = _selectedPackage.Position;
-        _rotationBeforeDrag = _packages[_selectedPackage].Rotation;
-            _selectedPackage.ZIndex = HoveredPackageZIndex;
+        _orientationBeforeDrag = _packages[_selectedPackage].Orientation;
+        _selectedPackage.ZIndex = HoveredPackageZIndex;
         _selectedPackage.SetOpacity(PackageGO.Opacity.Half);
         _draggingPackage = true;
     }
@@ -116,18 +121,10 @@ public partial class StorageView : Node2D, IInputState {
 
     private void _SnapPackageBackToLastValidPosition() {
         Package package = _packages[_selectedPackage];
-        PackageRotation current = package.Rotation;
-        List<Vector2I> tiles = package.Dimensions;
-        while (current != _rotationBeforeDrag) {
-            tiles = ShapeUtils.RotateCw(package.Dimensions).Values.ToList();
-            current = (PackageRotation)(((int)current + 5) % 4);
-        }
-
-        _packages[_selectedPackage].Rotation = _rotationBeforeDrag;
-        package.Dimensions = tiles;
-        _selectedPackage.SetHitBoxAndRotateSprite(tiles, _rotationBeforeDrag);
+        _packages[_selectedPackage].Orientation = _orientationBeforeDrag;
+        package.Dimensions = _hitboxesBeforeRotation;
+        _selectedPackage.SetHitBoxAndRotateSprite(_hitboxesBeforeRotation, _orientationBeforeDrag);
         _selectedPackage.Position = _positionBeforeDrag;
-        GD.Print($"Position after snapping back to last valid position {_selectedPackage?.Position}");
     }
 
     private void _StorageUnhovered(PackageStorage.StorageMode mode) {
@@ -162,7 +159,6 @@ public partial class StorageView : Node2D, IInputState {
     private void _HandleKeyPress(KeyDto keyDto) {
         if (keyDto.Pressed) {
             if (keyDto.Identifier == "Space") {
-                GD.Print("Space pressed to switch scene");
                 _sceneManager.ChangeScene(SceneId.CustomerView, string.Empty);
             } else if (keyDto.Identifier == "Q") {
                 _RotatePressed(false);
@@ -188,14 +184,13 @@ public partial class StorageView : Node2D, IInputState {
         Package package = _packages[packageGo];
         package.Dimensions = previousToNewTiles.Values.ToList();
         // Add 4 to avoid a situation where rotation is 0, and turning CCW makes it -1, resulting in invalid enum
-        package.Rotation = (PackageRotation)(((int)package.Rotation + 4 + (clockWise ? 1 : -1)) % 4);
-        packageGo.SetHitBoxAndRotateSprite(previousToNewTiles.Values.ToList(), package.Rotation);
+        package.Orientation = (PackageOrientation)(((int)package.Orientation + 4 + (clockWise ? 1 : -1)) % 4);
+        packageGo.SetHitBoxAndRotateSprite(previousToNewTiles.Values.ToList(), package.Orientation);
     }
 
     private void _SavePackagePosition(Package package, PackageGO packageGo, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
         int[,] grid = StorageUtils.GetStorageGrid(storageMode);
         foreach (Vector2I tile in tiles) {
-            GD.Print($"Saving tile {tile} in {storageMode}");
             grid[tile.X, tile.Y] = package.PackageId;
         }
 
@@ -243,9 +238,9 @@ public partial class StorageView : Node2D, IInputState {
             return;
         }
 
-        GD.Print($"HandlePackageHover {_packages[package].PackageId} {hovered}");
+        // GD.Print($"HandlePackageHover {_packages[package].PackageId} {hovered}");
         if (hovered) {
-            GD.Print($"Package hovered: {_packages[package].PackageId} {tilePosition}");
+            // GD.Print($"Package hovered: {_packages[package].PackageId} {tilePosition}");
             _selectedPackage = package;
             _selectedPackageTile = tilePosition;
             return;
@@ -257,7 +252,6 @@ public partial class StorageView : Node2D, IInputState {
     }
 
     private void _ExitStorageTile() {
-        GD.Print("Exit storage");
         _selectedStorage = PackageStorage.StorageMode.None;
     }
 
@@ -283,9 +277,9 @@ public partial class StorageView : Node2D, IInputState {
                 new Vector2I(1, 3)
             ],
             _placeholder64By128Package,
-            PackageRotation.Zero);
+            PackageOrientation.Up);
         _AddPackageGo(one, 1, new Vector2I(300, 0));
-        
+
         PackageGO two = PackageGoUtils.GenerateShape(
             this,
             [
@@ -299,7 +293,7 @@ public partial class StorageView : Node2D, IInputState {
                 new Vector2I(1, 3)
             ],
             _placeholder64By128Package,
-            PackageRotation.Zero);
+            PackageOrientation.Up);
         _AddPackageGo(two, 2, new Vector2I(300, 300));
     }
 

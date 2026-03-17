@@ -8,7 +8,7 @@ public class Package {
     public List<PackageLabel> RequiredLabels { get; } = [];
     public List<PackageLabel> GivenLabels { get; } = [];
     public int Weight { get; set; }
-    public PackageRotation Rotation { get; set; } = PackageRotation.Zero;
+    public PackageOrientation Orientation { get; set; } = PackageOrientation.Up;
 
     public Package(int packageId, TextureId textureId, List<Vector2I> dimensions, int weight) {
         PackageId = packageId;

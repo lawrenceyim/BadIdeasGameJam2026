@@ -52,18 +52,18 @@ public partial class PackageGO : Node2D {
         }
     }
     
-    public void SetHitBoxAndRotateSprite(List<Vector2I> positions, PackageRotation packageRotation) {
+    public void SetHitBoxAndRotateSprite(List<Vector2I> positions, PackageOrientation packageOrientation) {
         _SetHitboxPositions(positions);   
-        _RotateSprite(packageRotation);
+        _RotateSprite(packageOrientation);
     }
     
     // New hitbox positions must be set first
-    private void _RotateSprite(PackageRotation packageRotation) {
-        _sprite.Rotation = Mathf.DegToRad(packageRotation switch {
-            PackageRotation.Zero => 0,
-            PackageRotation.Ninety => 90,
-            PackageRotation.OneEighty => 180,
-            PackageRotation.TwoSeventy => 270
+    private void _RotateSprite(PackageOrientation packageOrientation) {
+        _sprite.Rotation = Mathf.DegToRad(packageOrientation switch {
+            PackageOrientation.Up => 0,
+            PackageOrientation.Right => 90,
+            PackageOrientation.Down => 180,
+            PackageOrientation.Left => 270
         });
         _sprite.Position = _ComputeSpritePosition();
     }
