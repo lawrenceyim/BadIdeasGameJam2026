@@ -54,11 +54,15 @@ public partial class StorageView : Node2D, IInputState, ITick {
         _shippingStorage.TileHovered += _TileHovered;
         _shippingStorage.StorageUnhovered += _StorageUnhovered;
 
+
+        PlayerDataRepository.LevelTimer.TimedOut += _HandleLevelTimedOut;
+
         _CreatePlaceholderPackage();
     }
 
     public override void _ExitTree() {
         _gameClock.RemoveActiveScene(GetInstanceId());
+        PlayerDataRepository.LevelTimer.TimedOut -= _HandleLevelTimedOut;
     }
 
     public void PhysicsTick() {
@@ -319,5 +323,9 @@ public partial class StorageView : Node2D, IInputState, ITick {
             PackageStorage.StorageMode.Shipping => _shippingStorage,
             PackageStorage.StorageMode.Storage => _packageStorage,
         };
+    }
+
+    private void _HandleLevelTimedOut() {
+        // TODO: Add day vs night
     }
 }

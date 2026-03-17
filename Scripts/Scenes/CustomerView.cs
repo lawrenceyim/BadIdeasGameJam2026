@@ -14,10 +14,13 @@ public partial class CustomerView : Node2D, IInputState, ITick {
         _gameClock = serviceLocator.GetService<GameClock>();
         _gameClock.AddActiveScene(this, GetInstanceId());
         _inputStateMachine.SetState(this);
+
+        PlayerDataRepository.LevelTimer.TimedOut += _HandleLevelTimedOut;
     }
 
     public override void _ExitTree() {
         _gameClock.RemoveActiveScene(GetInstanceId());
+        PlayerDataRepository.LevelTimer.TimedOut -= _HandleLevelTimedOut;
     }
 
     public void ProcessInput(InputEventDto eventDto) {
@@ -37,5 +40,13 @@ public partial class CustomerView : Node2D, IInputState, ITick {
 
     public void PhysicsTick() {
         PlayerDataRepository.LevelTimer.PhysicsTick();
+
+        if (PlayerDataRepository.PackagesInHolding.Count == 0) {
+            // TODO: Spawn new customer and new package
+        }
+    }
+
+    private void _HandleLevelTimedOut() {
+        // TODO: Add day vs night
     }
 }
