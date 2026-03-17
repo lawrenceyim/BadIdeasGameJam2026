@@ -21,7 +21,8 @@ public partial class StorageView : Node2D, IInputState {
     [Export]
     private Texture2D _placeholder64By128Package;
 
-
+    private readonly int NormalPackageZIndex = 5;
+    private readonly int HoveredPackageZIndex = 10;
     private readonly Dictionary<PackageGO, Package> _packages = [];
     private PackageGO? _selectedPackage;
     private PackageStorage.StorageMode _selectedStorage = PackageStorage.StorageMode.None;
@@ -32,6 +33,7 @@ public partial class StorageView : Node2D, IInputState {
     private PackageRotation _rotationBeforeDrag = PackageRotation.Zero;
     private InputStateMachine _inputStateMachine;
     private SceneManager _sceneManager;
+
 
     public override void _Ready() {
         ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
@@ -83,6 +85,7 @@ public partial class StorageView : Node2D, IInputState {
         GD.Print($"Position before drag {_selectedPackage?.Position}");
         _positionBeforeDrag = _selectedPackage.Position;
         _rotationBeforeDrag = _packages[_selectedPackage].Rotation;
+            _selectedPackage.ZIndex = HoveredPackageZIndex;
         _selectedPackage.SetOpacity(PackageGO.Opacity.Half);
         _draggingPackage = true;
     }
@@ -90,6 +93,7 @@ public partial class StorageView : Node2D, IInputState {
     private void _HandleMouseButtonRelease() {
         if (_draggingPackage) {
             _selectedPackage?.SetOpacity(PackageGO.Opacity.Full);
+            _selectedPackage.ZIndex = NormalPackageZIndex;
             _draggingPackage = false;
             _ClearAllHighlights();
             if (_selectedStorage is PackageStorage.StorageMode.None) {
@@ -281,6 +285,22 @@ public partial class StorageView : Node2D, IInputState {
             _placeholder64By128Package,
             PackageRotation.Zero);
         _AddPackageGo(one, 1, new Vector2I(300, 0));
+        
+        PackageGO two = PackageGoUtils.GenerateShape(
+            this,
+            [
+                new Vector2I(0, 0),
+                new Vector2I(0, 1),
+                new Vector2I(0, 2),
+                new Vector2I(0, 3),
+                new Vector2I(1, 0),
+                new Vector2I(1, 1),
+                new Vector2I(1, 2),
+                new Vector2I(1, 3)
+            ],
+            _placeholder64By128Package,
+            PackageRotation.Zero);
+        _AddPackageGo(two, 2, new Vector2I(300, 300));
     }
 
     private void _AddPackageGo(PackageGO packageGo, int packageId, Vector2I position) {

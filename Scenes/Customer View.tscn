@@ -19,12 +19,47 @@ texture = ExtResource("1_k2ue8")
 scale = Vector2(0.445, 0.445)
 texture = ExtResource("3_c4o6i")
 
+[node name="Register" type="Sprite2D" parent="." unique_id=1448282887]
+position = Vector2(531.00006, 224.00002)
+scale = Vector2(0.445, 0.445)
+texture = ExtResource("5_mh7xh")
+
 [node name="LabelCabinet" type="Sprite2D" parent="." unique_id=1180922315]
 position = Vector2(-476, 172.00002)
 scale = Vector2(0.445, 0.445)
 texture = ExtResource("4_yy4qc")
 
-[node name="Register" type="Sprite2D" parent="." unique_id=1448282887]
-position = Vector2(531.00006, 224.00002)
-scale = Vector2(0.445, 0.445)
-texture = ExtResource("5_mh7xh")
+[node name="Area2D" type="Area2D" parent="LabelCabinet" unique_id=350116195]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LabelCabinet/Area2D" unique_id=857034941]
+position = Vector2(-123.5955, -229.2135)
+scale = Vector2(0.99999994, 0.99999994)
+polygon = PackedVector2Array(0, -2.2472076, 193.25848, 11.235931, 202.24725, 150.5618, 13.483154, 143.82022)
+
+[node name="Area2D2" type="Area2D" parent="LabelCabinet" unique_id=1418108225]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LabelCabinet/Area2D2" unique_id=74034535]
+position = Vector2(-303.37085, -53.93261)
+scale = Vector2(0.99999994, 0.99999994)
+polygon = PackedVector2Array(-20.983, -17.622, 152.80896, 6.741577, 175.28088, 177.5281, -4.494385, 152.80902)
+
+[node name="Area2D3" type="Area2D" parent="LabelCabinet" unique_id=1726627451]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LabelCabinet/Area2D3" unique_id=2081787459]
+position = Vector2(-87.64044, -38.20227)
+scale = Vector2(0.99999994, 0.99999994)
+polygon = PackedVector2Array(-12.03, -3.91, 165.546, 4.494, 186.51685, 175.28091, 3.343, 169.352)
+
+[node name="Area2D4" type="Area2D" parent="LabelCabinet" unique_id=371535545]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LabelCabinet/Area2D4" unique_id=1108984937]
+position = Vector2(-280.89893, 150.56177)
+scale = Vector2(0.99999994, 0.99999994)
+polygon = PackedVector2Array(-13.45, -6.47, 166.551, 7.769, 180.467, 175.281, 0.698, 148.572)
+
+[node name="Area2D5" type="Area2D" parent="LabelCabinet" unique_id=583213179]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LabelCabinet/Area2D5" unique_id=80122325]
+position = Vector2(-56.17975, 161.79773)
+scale = Vector2(0.99999994, 0.99999994)
+polygon = PackedVector2Array(-17.27, 0, 165.231, 15.634, 192.767, 192.071, 7.678, 179.137)
