@@ -4,7 +4,7 @@ using Godot;
 using InputSystem;
 using ServiceSystem;
 
-public partial class StorageView : Node2D, IInputState {
+public partial class StorageView : Node2D, IInputState, ITick {
     [Export]
     private PackageStorage _holdingStorage;
 
@@ -34,13 +34,15 @@ public partial class StorageView : Node2D, IInputState {
     private PackageOrientation _orientationBeforeDrag = PackageOrientation.Up;
     private InputStateMachine _inputStateMachine;
     private SceneManager _sceneManager;
-
+    private GameClock _gameClock;
 
     public override void _Ready() {
         ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
         _sceneManager = serviceLocator.GetService<SceneManager>();
         _inputStateMachine = serviceLocator.GetService<InputStateMachine>();
         _inputStateMachine.SetState(this);
+        _gameClock = serviceLocator.GetService<GameClock>();
+        _gameClock.AddActiveScene(this, GetInstanceId());
 
         _holdingStorage.Initialize(TileInfo.TileSizeVector, PackageStorage.StorageMode.Holding);
         _packageStorage.Initialize(TileInfo.TileSizeVector, PackageStorage.StorageMode.Storage);
@@ -53,6 +55,14 @@ public partial class StorageView : Node2D, IInputState {
         _shippingStorage.StorageUnhovered += _StorageUnhovered;
 
         _CreatePlaceholderPackage();
+    }
+
+    public override void _ExitTree() {
+        _gameClock.RemoveActiveScene(GetInstanceId());
+    }
+
+    public void PhysicsTick() {
+        PlayerDataRepository.LevelTimer.PhysicsTick();
     }
 
     public void ProcessInput(InputEventDto eventDto) {

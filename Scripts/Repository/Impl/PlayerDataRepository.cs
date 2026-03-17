@@ -15,4 +15,6 @@ public class PlayerDataRepository : IRepository {
     public static int[,] HoldingGrid { get; } = new int[HoldingGridColumns, HoldingGridRows];
     public static int[,] ShippingGrid { get; } = new int[ShippingGridColumns, ShippingGridRows];
     public static int[,] StorageGrid { get; } = new int[StorageGridColumns, StorageGridRows];
+    public static TickTimer LevelTimer { get; } = new();
+    public static bool IsDay { get; set; } = true;
 }
