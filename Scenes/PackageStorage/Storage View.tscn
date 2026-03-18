@@ -22,7 +22,7 @@ texture = ExtResource("5_8bmbm")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1338915600]
 
 [node name="Holding Storage" parent="." unique_id=432576357 instance=ExtResource("2_51nkb")]
-position = Vector2(-59, 40)
+position = Vector2(-60, 40)
 
 [node name="Shipping Storage" parent="." unique_id=2087576014 instance=ExtResource("2_51nkb")]
 position = Vector2(265, -173)

@@ -57,7 +57,7 @@ public partial class StorageView : Node2D, IInputState, ITick {
 
         PlayerDataRepository.LevelTimer.TimedOut += _HandleLevelTimedOut;
 
-        _CreatePlaceholderPackage();
+        _InitPackages();
     }
 
     public override void _ExitTree() {
@@ -272,48 +272,20 @@ public partial class StorageView : Node2D, IInputState, ITick {
     private void _InitPackages() {
         foreach (Dictionary<Package, Vector2> packages in StorageUtils.Storages) {
             foreach (KeyValuePair<Package, Vector2> kvp in packages) {
-                // TODO: Create packages
+                PackageGO packageGo = PackageGoUtils.GenerateShape(
+                    this,
+                    kvp.Key.Dimensions,
+                    _placeholder64By128Package,
+                    kvp.Key.Orientation
+                );
+                _AddPackageGo(packageGo, kvp.Key, (Vector2I)kvp.Value);
             }
         }
     }
 
-    private void _CreatePlaceholderPackage() {
-        PackageGO one = PackageGoUtils.GenerateShape(
-            this,
-            [
-                new Vector2I(0, 0),
-                new Vector2I(0, 1),
-                new Vector2I(0, 2),
-                new Vector2I(0, 3),
-                new Vector2I(1, 0),
-                new Vector2I(1, 1),
-                new Vector2I(1, 2),
-                new Vector2I(1, 3)
-            ],
-            _placeholder64By128Package,
-            PackageOrientation.Up);
-        _AddPackageGo(one, 1, new Vector2I(300, 0));
-
-        PackageGO two = PackageGoUtils.GenerateShape(
-            this,
-            [
-                new Vector2I(0, 0),
-                new Vector2I(0, 1),
-                new Vector2I(0, 2),
-                new Vector2I(0, 3),
-                new Vector2I(1, 0),
-                new Vector2I(1, 1),
-                new Vector2I(1, 2),
-                new Vector2I(1, 3)
-            ],
-            _placeholder64By128Package,
-            PackageOrientation.Up);
-        _AddPackageGo(two, 2, new Vector2I(300, 300));
-    }
-
-    private void _AddPackageGo(PackageGO packageGo, int packageId, Vector2I position) {
+    private void _AddPackageGo(PackageGO packageGo, Package package, Vector2I position) {
         packageGo.Position = position;
-        _packages[packageGo] = new Package(packageId, TextureId.PlaceHolder, packageGo.HitboxPositions.Select(v => (Vector2I)v).ToList(), 10);
+        _packages[packageGo] = package;
         packageGo.Hovered += _HandlePackageHover;
     }
 
