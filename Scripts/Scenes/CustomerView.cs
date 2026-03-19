@@ -59,6 +59,7 @@ public partial class CustomerView : Node2D, IInputState, ITick {
 	}
 
 	private void _CreatePackage() {
+		// TODO: replace with actual package info from RNG instead of hard-coded
 		Package package = new Package(
 			PlayerDataRepository.NewPackageId++,
 			TextureId.PlaceHolder,
