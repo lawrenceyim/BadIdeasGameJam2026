@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://crv3jhua216cj" path="res://Scripts/Scenes/StorageView.cs" id="1_hmwcn"]
 [ext_resource type="PackedScene" uid="uid://bcrktom385lxj" path="res://Scenes/Game Object/PackageStorage.tscn" id="2_51nkb"]
-[ext_resource type="Texture2D" uid="uid://dexyhls6d02ku" path="res://Assets/Sprites/Placeholder/Placeholder PackageTile.png" id="3_6a4eg"]
 [ext_resource type="Texture2D" uid="uid://ritd0etiu2fm" path="res://Assets/Sprites/Placeholder/ui mockup.webp" id="5_8bmbm"]
 [ext_resource type="Texture2D" uid="uid://ddb2b0dehrwn0" path="res://Assets/Sprites/Placeholder/64 by 128 placeholder.png" id="5_nbya6"]
 
@@ -11,7 +10,6 @@ script = ExtResource("1_hmwcn")
 _holdingStorage = NodePath("Holding Storage")
 _packageStorage = NodePath("Package Storage")
 _shippingStorage = NodePath("Shipping Storage")
-_placeholderPackageTileRed = ExtResource("3_6a4eg")
 _placeholder64By128Package = ExtResource("5_nbya6")
 
 [node name="UiMockup" type="Sprite2D" parent="." unique_id=1090950073]

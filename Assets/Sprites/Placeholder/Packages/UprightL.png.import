@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dexyhls6d02ku"
-path="res://.godot/imported/Placeholder PackageTile.png-e5189411fb8074cf956345e7856e43e2.ctex"
+uid="uid://coyintrr7m1b1"
+path="res://.godot/imported/UprightL.png-a714e2d4e2aa502b716f22d6bd7f5553.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Placeholder PackageTile.png"
-dest_files=["res://.godot/imported/Placeholder PackageTile.png-e5189411fb8074cf956345e7856e43e2.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/UprightL.png"
+dest_files=["res://.godot/imported/UprightL.png-a714e2d4e2aa502b716f22d6bd7f5553.ctex"]
 
 [params]
 

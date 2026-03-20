@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://cqqra8pb8ite0"]
-
-[ext_resource type="Script" uid="uid://bca2r1rynipiw" path="res://Scripts/Test/ShapeUtilsTest.cs" id="1_e5xwu"]
-[ext_resource type="Texture2D" uid="uid://dexyhls6d02ku" path="res://Assets/Sprites/Placeholder/Placeholder PackageTile.png" id="2_ovct0"]
-
-[node name="Node2D" type="Node2D" unique_id=1814405913]
-script = ExtResource("1_e5xwu")
-_tileTexture = ExtResource("2_ovct0")

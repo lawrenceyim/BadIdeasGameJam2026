@@ -14,10 +14,6 @@ public partial class StorageView : Node2D, IInputState, ITick {
     [Export]
     private PackageStorage _shippingStorage;
 
-    // should put in Texture repo
-    [Export]
-    private Texture2D _placeholderPackageTileRed;
-
     [Export]
     private Texture2D _placeholder64By128Package;
 
