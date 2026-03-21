@@ -188,6 +188,7 @@ public partial class StorageView : Node2D, IInputState, ITick {
         }
 
         _Rotate(_selectedPackage, cw);
+        _MovePackageToMousePosition();
         _HighlightTiles(_packages[_selectedPackage]);
     }
 
@@ -200,6 +201,15 @@ public partial class StorageView : Node2D, IInputState, ITick {
         // Add 4 to avoid a situation where rotation is 0, and turning CCW makes it -1, resulting in invalid enum
         package.Orientation = (PackageOrientation)(((int)package.Orientation + 4 + (clockWise ? 1 : -1)) % 4);
         packageGo.SetHitBoxAndRotateSprite(previousToNewTiles.Values.ToList(), package.Orientation);
+
+        // Update selected tile to its new position
+        GD.Print($"Selected tile was {_selectedPackageTile} and is now {previousToNewTiles[_selectedPackageTile]}");
+        _selectedPackageTile = previousToNewTiles[_selectedPackageTile];
+    }
+
+    private void _MovePackageToMousePosition() {
+        // Subtract by half of tile size vector to center the mouse cursor on the selected package tile
+        _selectedPackage.Position = GetGlobalMousePosition() - _selectedPackageTile * TileInfo.TileSize - TileInfo.TileSizeVector / 2;
     }
 
     private void _SavePackagePosition(Package package, PackageGO packageGo, List<Vector2I> tiles, PackageStorage.StorageMode storageMode) {
