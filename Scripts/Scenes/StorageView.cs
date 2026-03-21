@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using InputSystem;
+using RepositorySystem;
 using ServiceSystem;
 
 public partial class StorageView : Node2D, IInputState, ITick {
@@ -31,12 +32,15 @@ public partial class StorageView : Node2D, IInputState, ITick {
     private InputStateMachine _inputStateMachine;
     private SceneManager _sceneManager;
     private GameClock _gameClock;
+    private TextureRepository _textureRepository;
 
     public override void _Ready() {
         ServiceLocator serviceLocator = GetNode<ServiceLocator>(ServiceLocator.AutoloadPath);
         _sceneManager = serviceLocator.GetService<SceneManager>();
         _inputStateMachine = serviceLocator.GetService<InputStateMachine>();
         _inputStateMachine.SetState(this);
+        RepositoryLocator repositoryLocator = serviceLocator.GetService<RepositoryLocator>();
+        _textureRepository = repositoryLocator.GetRepository<TextureRepository>(RepositoryName.Texture);
         _gameClock = serviceLocator.GetService<GameClock>();
         _gameClock.AddActiveScene(this, GetInstanceId());
 
@@ -271,7 +275,7 @@ public partial class StorageView : Node2D, IInputState, ITick {
                 PackageGO packageGo = PackageGoUtils.GenerateShape(
                     this,
                     kvp.Key.Dimensions,
-                    _placeholder64By128Package,
+                    _textureRepository.GetTexture(kvp.Key.TextureId),
                     kvp.Key.Orientation
                 );
                 _AddPackageGo(packageGo, kvp.Key, (Vector2I)kvp.Value);

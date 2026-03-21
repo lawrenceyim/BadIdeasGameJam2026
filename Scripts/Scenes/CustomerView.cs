@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using InputSystem;
 using ServiceSystem;
@@ -60,26 +61,20 @@ public partial class CustomerView : Node2D, IInputState, ITick {
 
     private void _CreatePackage() {
         // TODO: replace with actual package info from RNG instead of hard-coded
-        Package package = new Package(
+        int packageId = PackageUtil.GenerateRandomPackageId();
+        List<Vector2I> dimensions = PackageUtil.GetDimensions(packageId);
+        TextureId textureId = PackageUtil.GetPlaceholderPackageMiniId(packageId);
+        Package package = new(
             PlayerDataRepository.NewPackageId++,
-            TextureId.PlaceHolder,
-            [
-                new Vector2I(0, 0),
-                new Vector2I(0, 1),
-                new Vector2I(0, 2),
-                new Vector2I(0, 3),
-                new Vector2I(1, 0),
-                new Vector2I(1, 1),
-                new Vector2I(1, 2),
-                new Vector2I(1, 3)
-            ],
-            5);
+            textureId,
+            dimensions,
+            5
+        );
 
         PlayerDataRepository.PackagesInHolding.Add(package, _newPackageSpawnPosition);
         foreach (Vector2I pos in package.Dimensions) {
             PlayerDataRepository.HoldingGrid[pos.X, pos.Y] = package.PackageId;
         }
-
 
         // Init object on the counter
     }
