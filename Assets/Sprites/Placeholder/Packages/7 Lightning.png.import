@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://coyintrr7m1b1"
-path="res://.godot/imported/UprightL.png-a714e2d4e2aa502b716f22d6bd7f5553.ctex"
+uid="uid://67pytefh4bga"
+path="res://.godot/imported/7 Lightning.png-c7f964951a6396425c1e6c3ad798715a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Packages/UprightL.png"
-dest_files=["res://.godot/imported/UprightL.png-a714e2d4e2aa502b716f22d6bd7f5553.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/7 Lightning.png"
+dest_files=["res://.godot/imported/7 Lightning.png-c7f964951a6396425c1e6c3ad798715a.ctex"]
 
 [params]
 

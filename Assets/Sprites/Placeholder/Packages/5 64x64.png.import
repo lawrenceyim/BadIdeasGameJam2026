@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqhw2jk7pt0nt"
-path="res://.godot/imported/UpsideDownL.png-0aff85e1c9de4274c0c74710f801117e.ctex"
+uid="uid://d1gpjig5rquap"
+path="res://.godot/imported/5 64x64.png-3bdaa913b3fe8472d2c9c76dd24aaa2f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Packages/UpsideDownL.png"
-dest_files=["res://.godot/imported/UpsideDownL.png-0aff85e1c9de4274c0c74710f801117e.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/5 64x64.png"
+dest_files=["res://.godot/imported/5 64x64.png-3bdaa913b3fe8472d2c9c76dd24aaa2f.ctex"]
 
 [params]
 

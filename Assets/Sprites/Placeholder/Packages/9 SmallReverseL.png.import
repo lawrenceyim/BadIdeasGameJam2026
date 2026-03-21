@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q86xkowxc4t"
-path="res://.godot/imported/ThickL.png-b90425ab34502c8d815007e8e43d5d8c.ctex"
+uid="uid://dbf3ibilq311d"
+path="res://.godot/imported/9 SmallReverseL.png-8d277853501203d6bb49e58c672e596f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Packages/ThickL.png"
-dest_files=["res://.godot/imported/ThickL.png-b90425ab34502c8d815007e8e43d5d8c.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/9 SmallReverseL.png"
+dest_files=["res://.godot/imported/9 SmallReverseL.png-8d277853501203d6bb49e58c672e596f.ctex"]
 
 [params]
 

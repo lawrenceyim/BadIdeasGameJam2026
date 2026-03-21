@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dbf3ibilq311d"
-path="res://.godot/imported/SmallReverseL.png-bf72c5f4056d019e06a769b748a0b188.ctex"
+uid="uid://grabdutvd076"
+path="res://.godot/imported/12 128x32.png-9d3493c62e138d82b5758911b6f10b6c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Packages/SmallReverseL.png"
-dest_files=["res://.godot/imported/SmallReverseL.png-bf72c5f4056d019e06a769b748a0b188.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/12 128x32.png"
+dest_files=["res://.godot/imported/12 128x32.png-9d3493c62e138d82b5758911b6f10b6c.ctex"]
 
 [params]
 

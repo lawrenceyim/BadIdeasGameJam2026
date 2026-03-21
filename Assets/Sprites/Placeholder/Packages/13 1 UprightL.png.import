@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fkwqsmrrmkfq"
-path="res://.godot/imported/TetrisT.png-fc5c9208908658b49b04a8f941d96e33.ctex"
+uid="uid://coyintrr7m1b1"
+path="res://.godot/imported/13 1 UprightL.png-c45773c45c1e3ff14ad0cf4cdd8d10a0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Packages/TetrisT.png"
-dest_files=["res://.godot/imported/TetrisT.png-fc5c9208908658b49b04a8f941d96e33.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/13 1 UprightL.png"
+dest_files=["res://.godot/imported/13 1 UprightL.png-c45773c45c1e3ff14ad0cf4cdd8d10a0.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfydx5qhcxmjo"
-path="res://.godot/imported/32x64.png-5c54a6344b4ca74d05de70f98def59ff.ctex"
+uid="uid://dg211nneftnlr"
+path="res://.godot/imported/11 Stair.png-31408e81a97341637a74e259aa9b7853.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Placeholder/Packages/32x64.png"
-dest_files=["res://.godot/imported/32x64.png-5c54a6344b4ca74d05de70f98def59ff.ctex"]
+source_file="res://Assets/Sprites/Placeholder/Packages/11 Stair.png"
+dest_files=["res://.godot/imported/11 Stair.png-31408e81a97341637a74e259aa9b7853.ctex"]
 
 [params]
 
