@@ -5,6 +5,8 @@ using Godot;
 public class PackageUtil {
     private static Random _rng = new Random();
 
+    #region Package Data
+
     private static readonly Dictionary<int, List<Vector2I>> _packageDimensions = new() {
         {
             1,
@@ -131,31 +133,45 @@ public class PackageUtil {
         },
     };
 
+    private static readonly int[] Weights = {
+        5, 7, 5, 9, 12,
+        5, 13, 6, 3, 7,
+        13, 15, 8, 15, 20
+    };
+
+    private static readonly TextureId[] PackageTextureId = {
+        TextureId.PlaceHolderPackageMini1,
+        TextureId.PlaceHolderPackageMini2,
+        TextureId.PlaceHolderPackageMini3,
+        TextureId.PlaceHolderPackageMini4,
+        TextureId.PlaceHolderPackageMini5,
+        TextureId.PlaceHolderPackageMini6,
+        TextureId.PlaceHolderPackageMini7,
+        TextureId.PlaceHolderPackageMini8,
+        TextureId.PlaceHolderPackageMini9,
+        TextureId.PlaceHolderPackageMini10,
+        TextureId.PlaceHolderPackageMini11,
+        TextureId.PlaceHolderPackageMini12,
+        TextureId.PlaceHolderPackageMini13,
+        TextureId.PlaceHolderPackageMini14,
+        TextureId.PlaceHolderPackageMini15
+    };
+
+    #endregion
+
     public static int GenerateRandomPackageId() {
         return _rng.Next(1, 16);
     }
 
     public static TextureId GetPlaceholderPackageMiniId(int id) {
-        return id switch {
-            1 => TextureId.PlaceHolderPackageMini1,
-            2 => TextureId.PlaceHolderPackageMini2,
-            3 => TextureId.PlaceHolderPackageMini3,
-            4 => TextureId.PlaceHolderPackageMini4,
-            5 => TextureId.PlaceHolderPackageMini5,
-            6 => TextureId.PlaceHolderPackageMini6,
-            7 => TextureId.PlaceHolderPackageMini7,
-            8 => TextureId.PlaceHolderPackageMini8,
-            9 => TextureId.PlaceHolderPackageMini9,
-            10 => TextureId.PlaceHolderPackageMini10,
-            11 => TextureId.PlaceHolderPackageMini11,
-            12 => TextureId.PlaceHolderPackageMini12,
-            13 => TextureId.PlaceHolderPackageMini13,
-            14 => TextureId.PlaceHolderPackageMini14,
-            15 => TextureId.PlaceHolderPackageMini15
-        };
+        return PackageTextureId[id - 1];
     }
 
     public static List<Vector2I> GetDimensions(int id) {
         return _packageDimensions[id];
+    }
+
+    public static int GetWeight(int key) {
+        return Weights[key];
     }
 }

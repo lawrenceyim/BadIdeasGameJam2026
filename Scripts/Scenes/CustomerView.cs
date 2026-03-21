@@ -62,13 +62,13 @@ public partial class CustomerView : Node2D, IInputState, ITick {
     private void _CreatePackage() {
         // TODO: replace with actual package info from RNG instead of hard-coded
         int packageId = PackageUtil.GenerateRandomPackageId();
-        List<Vector2I> dimensions = PackageUtil.GetDimensions(packageId);
-        TextureId textureId = PackageUtil.GetPlaceholderPackageMiniId(packageId);
+
+        // Probably could make this a function itself
         Package package = new(
             PlayerDataRepository.NewPackageId++,
-            textureId,
-            dimensions,
-            5
+            PackageUtil.GetPlaceholderPackageMiniId(packageId),
+            PackageUtil.GetDimensions(packageId),
+            PackageUtil.GetWeight(packageId)
         );
 
         PlayerDataRepository.PackagesInHolding.Add(package, _newPackageSpawnPosition);
